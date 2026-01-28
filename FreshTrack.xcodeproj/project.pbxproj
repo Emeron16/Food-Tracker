@@ -1,0 +1,685 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DCCC6A222F28232D008E387D /* ModelsGrocery.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A212F28232D008E387D /* ModelsGrocery.swift */; };
+		DCCC6A262F28233C008E387D /* ViewsAddGroceryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */; };
+		DCCC6A282F282343008E387D /* ComponentsGroceryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A272F282343008E387D /* ComponentsGroceryRowView.swift */; };
+		DCCC6A2D2F293EE5008E387D /* PantryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A2C2F293EE5008E387D /* PantryView.swift */; };
+		DCCC6A452F295420008E387D /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A442F295420008E387D /* MainTabView.swift */; };
+		DCCC6A472F295431008E387D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A462F295431008E387D /* HomeView.swift */; };
+		DCCC6A4A2F299058008E387D /* BarcodeScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A492F299058008E387D /* BarcodeScannerView.swift */; };
+		DCCC6A4D2F29907A008E387D /* BarcodeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A4B2F29907A008E387D /* BarcodeAPIService.swift */; };
+		DCCC6A4F2F299095008E387D /* ScannedProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A4E2F299095008E387D /* ScannedProduct.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DCCC69FB2F281F07008E387D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DCCC69E32F281F05008E387D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCCC69EA2F281F05008E387D;
+			remoteInfo = FreshTrack;
+		};
+		DCCC6A052F281F07008E387D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DCCC69E32F281F05008E387D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCCC69EA2F281F05008E387D;
+			remoteInfo = FreshTrack;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DCCC69EB2F281F05008E387D /* FreshTrack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreshTrack.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCCC69FA2F281F07008E387D /* FreshTrackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreshTrackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCCC6A042F281F07008E387D /* FreshTrackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreshTrackUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCCC6A212F28232D008E387D /* ModelsGrocery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsGrocery.swift; sourceTree = "<group>"; };
+		DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsAddGroceryView.swift; sourceTree = "<group>"; };
+		DCCC6A272F282343008E387D /* ComponentsGroceryRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsGroceryRowView.swift; sourceTree = "<group>"; };
+		DCCC6A2C2F293EE5008E387D /* PantryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PantryView.swift; sourceTree = "<group>"; };
+		DCCC6A442F295420008E387D /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		DCCC6A462F295431008E387D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		DCCC6A492F299058008E387D /* BarcodeScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeScannerView.swift; sourceTree = "<group>"; };
+		DCCC6A4B2F29907A008E387D /* BarcodeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeAPIService.swift; sourceTree = "<group>"; };
+		DCCC6A4E2F299095008E387D /* ScannedProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedProduct.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DCCC69ED2F281F05008E387D /* FreshTrack */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FreshTrack;
+			sourceTree = "<group>";
+		};
+		DCCC69FD2F281F07008E387D /* FreshTrackTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FreshTrackTests;
+			sourceTree = "<group>";
+		};
+		DCCC6A072F281F07008E387D /* FreshTrackUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FreshTrackUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DCCC69E82F281F05008E387D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCCC69F72F281F07008E387D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCCC6A012F281F07008E387D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DCCC69E22F281F05008E387D = {
+			isa = PBXGroup;
+			children = (
+				DCCC6A2B2F293A46008E387D /* Components */,
+				DCCC6A2A2F293A40008E387D /* Views */,
+				DCCC6A292F293A01008E387D /* Models */,
+				DCCC69ED2F281F05008E387D /* FreshTrack */,
+				DCCC69FD2F281F07008E387D /* FreshTrackTests */,
+				DCCC6A072F281F07008E387D /* FreshTrackUITests */,
+				DCCC69EC2F281F05008E387D /* Products */,
+				DCCC6A4C2F29907A008E387D /* Services */,
+			);
+			sourceTree = "<group>";
+		};
+		DCCC69EC2F281F05008E387D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC69EB2F281F05008E387D /* FreshTrack.app */,
+				DCCC69FA2F281F07008E387D /* FreshTrackTests.xctest */,
+				DCCC6A042F281F07008E387D /* FreshTrackUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCCC6A292F293A01008E387D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC6A212F28232D008E387D /* ModelsGrocery.swift */,
+				DCCC6A2C2F293EE5008E387D /* PantryView.swift */,
+				DCCC6A4E2F299095008E387D /* ScannedProduct.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DCCC6A2A2F293A40008E387D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */,
+				DCCC6A442F295420008E387D /* MainTabView.swift */,
+				DCCC6A462F295431008E387D /* HomeView.swift */,
+				DCCC6A492F299058008E387D /* BarcodeScannerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DCCC6A2B2F293A46008E387D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC6A272F282343008E387D /* ComponentsGroceryRowView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		DCCC6A4C2F29907A008E387D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC6A4B2F29907A008E387D /* BarcodeAPIService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DCCC69EA2F281F05008E387D /* FreshTrack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCCC6A0E2F281F07008E387D /* Build configuration list for PBXNativeTarget "FreshTrack" */;
+			buildPhases = (
+				DCCC69E72F281F05008E387D /* Sources */,
+				DCCC69E82F281F05008E387D /* Frameworks */,
+				DCCC69E92F281F05008E387D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DCCC69ED2F281F05008E387D /* FreshTrack */,
+			);
+			name = FreshTrack;
+			packageProductDependencies = (
+			);
+			productName = FreshTrack;
+			productReference = DCCC69EB2F281F05008E387D /* FreshTrack.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DCCC69F92F281F07008E387D /* FreshTrackTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCCC6A112F281F07008E387D /* Build configuration list for PBXNativeTarget "FreshTrackTests" */;
+			buildPhases = (
+				DCCC69F62F281F07008E387D /* Sources */,
+				DCCC69F72F281F07008E387D /* Frameworks */,
+				DCCC69F82F281F07008E387D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCCC69FC2F281F07008E387D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DCCC69FD2F281F07008E387D /* FreshTrackTests */,
+			);
+			name = FreshTrackTests;
+			packageProductDependencies = (
+			);
+			productName = FreshTrackTests;
+			productReference = DCCC69FA2F281F07008E387D /* FreshTrackTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DCCC6A032F281F07008E387D /* FreshTrackUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCCC6A142F281F07008E387D /* Build configuration list for PBXNativeTarget "FreshTrackUITests" */;
+			buildPhases = (
+				DCCC6A002F281F07008E387D /* Sources */,
+				DCCC6A012F281F07008E387D /* Frameworks */,
+				DCCC6A022F281F07008E387D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCCC6A062F281F07008E387D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DCCC6A072F281F07008E387D /* FreshTrackUITests */,
+			);
+			name = FreshTrackUITests;
+			packageProductDependencies = (
+			);
+			productName = FreshTrackUITests;
+			productReference = DCCC6A042F281F07008E387D /* FreshTrackUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DCCC69E32F281F05008E387D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					DCCC69EA2F281F05008E387D = {
+						CreatedOnToolsVersion = 26.0.1;
+					};
+					DCCC69F92F281F07008E387D = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = DCCC69EA2F281F05008E387D;
+					};
+					DCCC6A032F281F07008E387D = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = DCCC69EA2F281F05008E387D;
+					};
+				};
+			};
+			buildConfigurationList = DCCC69E62F281F05008E387D /* Build configuration list for PBXProject "FreshTrack" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DCCC69E22F281F05008E387D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DCCC69EC2F281F05008E387D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DCCC69EA2F281F05008E387D /* FreshTrack */,
+				DCCC69F92F281F07008E387D /* FreshTrackTests */,
+				DCCC6A032F281F07008E387D /* FreshTrackUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DCCC69E92F281F05008E387D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCCC69F82F281F07008E387D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCCC6A022F281F07008E387D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DCCC69E72F281F05008E387D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCCC6A4D2F29907A008E387D /* BarcodeAPIService.swift in Sources */,
+				DCCC6A4A2F299058008E387D /* BarcodeScannerView.swift in Sources */,
+				DCCC6A222F28232D008E387D /* ModelsGrocery.swift in Sources */,
+				DCCC6A472F295431008E387D /* HomeView.swift in Sources */,
+				DCCC6A2D2F293EE5008E387D /* PantryView.swift in Sources */,
+				DCCC6A4F2F299095008E387D /* ScannedProduct.swift in Sources */,
+				DCCC6A282F282343008E387D /* ComponentsGroceryRowView.swift in Sources */,
+				DCCC6A262F28233C008E387D /* ViewsAddGroceryView.swift in Sources */,
+				DCCC6A452F295420008E387D /* MainTabView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCCC69F62F281F07008E387D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCCC6A002F281F07008E387D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DCCC69FC2F281F07008E387D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCCC69EA2F281F05008E387D /* FreshTrack */;
+			targetProxy = DCCC69FB2F281F07008E387D /* PBXContainerItemProxy */;
+		};
+		DCCC6A062F281F07008E387D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCCC69EA2F281F05008E387D /* FreshTrack */;
+			targetProxy = DCCC6A052F281F07008E387D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DCCC6A0C2F281F07008E387D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DCCC6A0D2F281F07008E387D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		DCCC6A0F2F281F07008E387D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4997JZUZB6;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "FreshTrack uses your camera to scan barcodes on grocery items.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrack;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		DCCC6A102F281F07008E387D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4997JZUZB6;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "FreshTrack uses your camera to scan barcodes on grocery items.";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrack;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		DCCC6A122F281F07008E387D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrackTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FreshTrack.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FreshTrack";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		DCCC6A132F281F07008E387D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrackTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FreshTrack.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FreshTrack";
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		DCCC6A152F281F07008E387D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrackUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = FreshTrack;
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		DCCC6A162F281F07008E387D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrackUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_TARGET_NAME = FreshTrack;
+				XROS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DCCC69E62F281F05008E387D /* Build configuration list for PBXProject "FreshTrack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCCC6A0C2F281F07008E387D /* Debug */,
+				DCCC6A0D2F281F07008E387D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCCC6A0E2F281F07008E387D /* Build configuration list for PBXNativeTarget "FreshTrack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCCC6A0F2F281F07008E387D /* Debug */,
+				DCCC6A102F281F07008E387D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCCC6A112F281F07008E387D /* Build configuration list for PBXNativeTarget "FreshTrackTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCCC6A122F281F07008E387D /* Debug */,
+				DCCC6A132F281F07008E387D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCCC6A142F281F07008E387D /* Build configuration list for PBXNativeTarget "FreshTrackUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCCC6A152F281F07008E387D /* Debug */,
+				DCCC6A162F281F07008E387D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DCCC69E32F281F05008E387D /* Project object */;
+}
