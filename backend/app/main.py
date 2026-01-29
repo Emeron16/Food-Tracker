@@ -6,6 +6,7 @@ from app.config import settings
 from app.api.v1.router import api_router
 from app.db import create_tables
 from app.services.barcode_service import barcode_service
+from app.services.spoonacular_service import spoonacular_service
 
 
 @asynccontextmanager
@@ -17,10 +18,13 @@ async def lifespan(app: FastAPI):
     print("Database tables created.")
     await barcode_service.initialize()
     print("Barcode service initialized.")
+    await spoonacular_service.initialize()
+    print("Spoonacular service initialized.")
 
     yield
 
     # Shutdown
+    await spoonacular_service.close()
     await barcode_service.close()
     print("Shutting down FreshTrack API...")
 

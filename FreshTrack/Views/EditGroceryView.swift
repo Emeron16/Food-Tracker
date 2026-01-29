@@ -1,16 +1,16 @@
 //
-//  AddGroceryView.swift
+//  EditGroceryView.swift
 //  FreshTrack
 //
-//  Created by Prince Marcelle on 1/26/26.
+//  Created by Claude on 1/28/26.
 //
 
 import SwiftUI
 import SwiftData
 
-struct AddGroceryView: View {
-    @Environment(\.modelContext) private var modelContext
+struct EditGroceryView: View {
     @Environment(\.dismiss) private var dismiss
+    @Bindable var grocery: Grocery
 
     @State private var name: String
     @State private var category: FoodCategory
@@ -21,49 +21,18 @@ struct AddGroceryView: View {
     @State private var hasExpirationDate: Bool
     @State private var expirationDate: Date
     @State private var notes: String
-    @State private var barcode: String?
 
-    /// Default initializer (no pre-fill)
-    init() {
-        _name = State(initialValue: "")
-        _category = State(initialValue: .other)
-        _storageLocation = State(initialValue: .refrigerator)
-        _quantity = State(initialValue: 1)
-        _unit = State(initialValue: .piece)
-        _purchaseDate = State(initialValue: Date())
-        _hasExpirationDate = State(initialValue: false)
-        _expirationDate = State(initialValue: Date().addingTimeInterval(7 * 24 * 60 * 60))
-        _notes = State(initialValue: "")
-        _barcode = State(initialValue: nil)
-    }
-
-    /// Pre-fill initializer for barcode scanning
-    init(scannedProduct: ScannedProduct?, barcode: String? = nil) {
-        if let product = scannedProduct {
-            _name = State(initialValue: product.displayName)
-            _category = State(initialValue: product.suggestedCategory)
-            _storageLocation = State(initialValue: Grocery.suggestedStorageLocation(for: product.suggestedCategory))
-            _quantity = State(initialValue: 1)
-            _unit = State(initialValue: .piece)
-            _purchaseDate = State(initialValue: Date())
-            _hasExpirationDate = State(initialValue: false)
-            _expirationDate = State(initialValue: Date().addingTimeInterval(
-                Double(product.suggestedCategory.defaultExpirationDays) * 24 * 60 * 60
-            ))
-            _notes = State(initialValue: "")
-            _barcode = State(initialValue: product.barcode)
-        } else {
-            _name = State(initialValue: "")
-            _category = State(initialValue: .other)
-            _storageLocation = State(initialValue: .refrigerator)
-            _quantity = State(initialValue: 1)
-            _unit = State(initialValue: .piece)
-            _purchaseDate = State(initialValue: Date())
-            _hasExpirationDate = State(initialValue: false)
-            _expirationDate = State(initialValue: Date().addingTimeInterval(7 * 24 * 60 * 60))
-            _notes = State(initialValue: "")
-            _barcode = State(initialValue: barcode)
-        }
+    init(grocery: Grocery) {
+        self.grocery = grocery
+        _name = State(initialValue: grocery.name)
+        _category = State(initialValue: grocery.category)
+        _storageLocation = State(initialValue: grocery.storageLocation)
+        _quantity = State(initialValue: grocery.quantity)
+        _unit = State(initialValue: grocery.unit)
+        _purchaseDate = State(initialValue: grocery.purchaseDate)
+        _hasExpirationDate = State(initialValue: grocery.expirationDate != nil)
+        _expirationDate = State(initialValue: grocery.expirationDate ?? grocery.predictedExpirationDate ?? Date())
+        _notes = State(initialValue: grocery.notes ?? "")
     }
 
     var body: some View {
@@ -79,14 +48,6 @@ struct AddGroceryView: View {
                         ForEach(FoodCategory.allCases) { cat in
                             Label(cat.rawValue, systemImage: cat.icon)
                                 .tag(cat)
-                        }
-                    }
-                    .onChange(of: category) { _, newCategory in
-                        storageLocation = Grocery.suggestedStorageLocation(for: newCategory)
-                        if !hasExpirationDate {
-                            expirationDate = purchaseDate.addingTimeInterval(
-                                Double(newCategory.defaultExpirationDays) * 24 * 60 * 60
-                            )
                         }
                     }
 
@@ -142,13 +103,6 @@ struct AddGroceryView: View {
 
                 Section("Dates") {
                     DatePicker("Purchase Date", selection: $purchaseDate, displayedComponents: .date)
-                        .onChange(of: purchaseDate) { _, newDate in
-                            if !hasExpirationDate {
-                                expirationDate = newDate.addingTimeInterval(
-                                    Double(category.defaultExpirationDays) * 24 * 60 * 60
-                                )
-                            }
-                        }
 
                     Toggle("Set Expiration Date", isOn: $hasExpirationDate)
 
@@ -176,14 +130,26 @@ struct AddGroceryView: View {
 #endif
                 }
 
-                if name.isEmpty {
-                    Section("Quick Add") {
-                        quickAddGrid
+                // Info section
+                Section {
+                    if let barcode = grocery.barcode {
+                        HStack {
+                            Text("Barcode")
+                            Spacer()
+                            Text(barcode)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    HStack {
+                        Text("Added")
+                        Spacer()
+                        Text(grocery.createdAt, style: .date)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
             .formStyle(.grouped)
-            .navigationTitle("Add Grocery")
+            .navigationTitle("Edit Grocery")
 #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
@@ -194,7 +160,7 @@ struct AddGroceryView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        saveGrocery()
+                        saveChanges()
                         dismiss()
                     }
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -206,7 +172,7 @@ struct AddGroceryView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button("Save") {
-                        saveGrocery()
+                        saveChanges()
                         dismiss()
                     }
                     .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -223,65 +189,27 @@ struct AddGroceryView: View {
         purchaseDate.addingTimeInterval(Double(category.defaultExpirationDays) * 24 * 60 * 60)
     }
 
-    // MARK: - Quick Add Grid
+    // MARK: - Save Changes
 
-    private var quickAddGrid: some View {
-        LazyVGrid(columns: [
-            GridItem(.flexible()),
-            GridItem(.flexible()),
-            GridItem(.flexible())
-        ], spacing: 12) {
-            quickAddButton("Milk", category: .dairy, unit: .gallon)
-            quickAddButton("Eggs", category: .dairy, unit: .dozen)
-            quickAddButton("Bread", category: .bakery, unit: .package)
-            quickAddButton("Chicken", category: .meat, unit: .pound)
-            quickAddButton("Apples", category: .produce, unit: .piece)
-            quickAddButton("Bananas", category: .produce, unit: .bunch)
-            quickAddButton("Cheese", category: .dairy, unit: .package)
-            quickAddButton("Yogurt", category: .dairy, unit: .piece)
-            quickAddButton("Lettuce", category: .produce, unit: .piece)
+    private func saveChanges() {
+        grocery.name = name.trimmingCharacters(in: .whitespaces)
+        grocery.category = category
+        grocery.storageLocation = storageLocation
+        grocery.quantity = quantity
+        grocery.unit = unit
+        grocery.purchaseDate = purchaseDate
+        grocery.notes = notes.isEmpty ? nil : notes
+        grocery.updatedAt = Date()
+
+        if hasExpirationDate {
+            grocery.expirationDate = expirationDate
+            grocery.predictedExpirationDate = nil
+            grocery.confidenceScore = nil
+        } else {
+            grocery.expirationDate = nil
+            grocery.predictedExpirationDate = estimatedExpirationDate
+            grocery.confidenceScore = 0.75
         }
-        .padding(.vertical, 4)
-    }
-
-    private func quickAddButton(_ itemName: String, category cat: FoodCategory, unit u: MeasurementUnit) -> some View {
-        Button {
-            name = itemName
-            category = cat
-            unit = u
-            storageLocation = Grocery.suggestedStorageLocation(for: cat)
-        } label: {
-            VStack(spacing: 4) {
-                Image(systemName: cat.icon)
-                    .font(.title3)
-                Text(itemName)
-                    .font(.caption)
-                    .lineLimit(1)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-            .background(.quaternary, in: RoundedRectangle(cornerRadius: 8))
-        }
-        .buttonStyle(.plain)
-    }
-
-    // MARK: - Save
-
-    private func saveGrocery() {
-        let newGrocery = Grocery(
-            name: name.trimmingCharacters(in: .whitespaces),
-            category: category,
-            storageLocation: storageLocation,
-            quantity: quantity,
-            unit: unit,
-            purchaseDate: purchaseDate,
-            expirationDate: hasExpirationDate ? expirationDate : nil,
-            predictedExpirationDate: hasExpirationDate ? nil : estimatedExpirationDate,
-            confidenceScore: hasExpirationDate ? nil : 0.75,
-            barcode: barcode,
-            notes: notes.isEmpty ? nil : notes
-        )
-        modelContext.insert(newGrocery)
 
         // Notify to refresh notifications
         NotificationCenter.default.post(name: .groceriesDidChange, object: nil)
@@ -291,7 +219,18 @@ struct AddGroceryView: View {
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Grocery.self, configurations: config)
-    
-    return AddGroceryView()
+
+    let sampleGrocery = Grocery(
+        name: "Milk",
+        category: .dairy,
+        storageLocation: .refrigerator,
+        quantity: 1,
+        unit: .gallon,
+        purchaseDate: Date(),
+        expirationDate: Date().addingTimeInterval(7 * 24 * 60 * 60)
+    )
+    container.mainContext.insert(sampleGrocery)
+
+    return EditGroceryView(grocery: sampleGrocery)
         .modelContainer(container)
 }

@@ -17,6 +17,7 @@ struct PantryView: View {
     ) private var groceries: [Grocery]
     @State private var showingAddGrocery = false
     @State private var searchText = ""
+    @State private var groceryToEdit: Grocery?
 
     private var filteredGroceries: [Grocery] {
         if searchText.isEmpty {
@@ -43,6 +44,9 @@ struct PantryView: View {
                     Section {
                         ForEach(expiringItems.prefix(3)) { grocery in
                             GroceryRowView(grocery: grocery)
+                                .contextMenu {
+                                    contextMenuItems(for: grocery)
+                                }
                         }
                     } header: {
                         HStack {
@@ -57,6 +61,9 @@ struct PantryView: View {
                 Section {
                     ForEach(filteredGroceries) { grocery in
                         GroceryRowView(grocery: grocery)
+                            .contextMenu {
+                                contextMenuItems(for: grocery)
+                            }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     deleteGrocery(grocery)
@@ -106,6 +113,9 @@ struct PantryView: View {
             .sheet(isPresented: $showingAddGrocery) {
                 AddGroceryView()
             }
+            .sheet(item: $groceryToEdit) { grocery in
+                EditGroceryView(grocery: grocery)
+            }
             .overlay {
                 if groceries.isEmpty {
                     ContentUnavailableView {
@@ -127,8 +137,11 @@ struct PantryView: View {
 
     private func deleteGrocery(_ grocery: Grocery) {
         withAnimation {
+            // Remove notifications for this grocery
+            ExpirationNotificationService.shared.removeNotifications(for: grocery)
             modelContext.delete(grocery)
         }
+        notifyGroceriesChanged()
     }
 
     private func markConsumed(_ grocery: Grocery) {
@@ -136,6 +149,38 @@ struct PantryView: View {
             grocery.isConsumed = true
             grocery.consumedDate = Date()
             grocery.updatedAt = Date()
+            // Remove notifications for consumed grocery
+            ExpirationNotificationService.shared.removeNotifications(for: grocery)
+        }
+        notifyGroceriesChanged()
+    }
+
+    private func notifyGroceriesChanged() {
+        NotificationCenter.default.post(name: .groceriesDidChange, object: nil)
+    }
+
+    // MARK: - Context Menu
+
+    @ViewBuilder
+    private func contextMenuItems(for grocery: Grocery) -> some View {
+        Button {
+            groceryToEdit = grocery
+        } label: {
+            Label("Edit", systemImage: "pencil")
+        }
+
+        Button {
+            markConsumed(grocery)
+        } label: {
+            Label("Mark as Used", systemImage: "checkmark.circle")
+        }
+
+        Divider()
+
+        Button(role: .destructive) {
+            deleteGrocery(grocery)
+        } label: {
+            Label("Delete", systemImage: "trash")
         }
     }
 }

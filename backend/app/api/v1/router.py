@@ -1,9 +1,10 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, groceries, barcode
+from app.api.v1.endpoints import auth, groceries, barcode, recipes
 
 api_router = APIRouter()
 
 api_router.include_router(auth.router)
 api_router.include_router(groceries.router)
 api_router.include_router(barcode.router)
+api_router.include_router(recipes.router)

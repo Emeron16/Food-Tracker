@@ -259,6 +259,12 @@ final class Grocery {
         return "\(formatted) \(unit.displayName)"
     }
 
+    /// Unique identifier for notifications (based on name and creation time)
+    var notificationIdentifier: String {
+        let timestamp = Int(createdAt.timeIntervalSince1970)
+        return "\(name.hashValue)-\(timestamp)"
+    }
+
     // MARK: - Initialization
 
     init(

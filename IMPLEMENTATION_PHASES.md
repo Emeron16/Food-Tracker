@@ -58,45 +58,90 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 
 ---
 
-## Phase 2: Barcode Scanning
+## Phase 2: Barcode Scanning ✅ COMPLETED
 
 **Goal**: Quick grocery entry via camera
 
 ### iOS Tasks
-- [ ] Implement `BarcodeScannerService` using Vision framework
-- [ ] Create `ScannerView` with camera preview
-- [ ] Create `ScannerViewModel` for scan logic
-- [ ] Add camera overlay with barcode detection frame
-- [ ] Implement barcode lookup from Open Food Facts
-- [ ] Add manual entry fallback when barcode not found
-- [ ] Cache barcode lookups locally
-- [ ] Handle camera permissions
-- [ ] Add haptic feedback on successful scan
+- [x] Implement `BarcodeScannerService` using Vision framework
+- [x] Create `ScannerView` with camera preview
+- [x] Create `ScannerViewModel` for scan logic
+- [x] Add camera overlay with barcode detection frame
+- [x] Implement barcode lookup from Open Food Facts
+- [x] Add manual entry fallback when barcode not found
+- [x] Cache barcode lookups locally
+- [x] Handle camera permissions
+- [x] Add haptic feedback on successful scan
 
-### iOS Files to Create
-- `FreshTrack/Infrastructure/Vision/BarcodeScannerService.swift`
-- `FreshTrack/Infrastructure/Vision/CameraPreviewView.swift`
-- `FreshTrack/Presentation/Screens/Scanner/ScannerView.swift`
-- `FreshTrack/Presentation/Screens/Scanner/ScannerViewModel.swift`
-- `FreshTrack/Presentation/Components/ScannerOverlay.swift`
-- `FreshTrack/Data/Network/Services/BarcodeAPIService.swift`
-- `FreshTrack/Domain/Models/ProductInfo.swift`
+### iOS Files Created (Actual)
+- `FreshTrack/Views/BarcodeScannerView.swift` — Scanner view with DataScannerViewController, camera preview, overlays, and scan logic
+- `FreshTrack/Services/BarcodeAPIService.swift` — Open Food Facts API integration with category mapping
+- `FreshTrack/Models/ScannedProduct.swift` — Product info model for scanned barcodes
 
 ### Backend Tasks
-- [ ] Create barcode lookup endpoint
-- [ ] Integrate Open Food Facts API
+- [x] Create barcode lookup endpoint
+- [x] Integrate Open Food Facts API
 - [ ] Integrate UPC Database API as backup
-- [ ] Implement barcode result caching with Redis
+- [x] Implement barcode result caching with Redis
 - [ ] Store product catalog for offline suggestions
 
-### Backend Files to Create
-- `backend/app/services/barcode_service.py`
-- `backend/app/api/v1/endpoints/barcode.py`
-- `backend/app/api/v1/schemas/barcode.py`
+### Backend Files Created (Actual)
+- `backend/app/services/barcode_service.py` — Barcode lookup with Redis caching
+- `backend/app/api/v1/endpoints/barcode.py` — GET /barcode/{barcode} endpoint
+- `backend/app/api/v1/schemas/barcode.py` — BarcodeProductResponse schema
 
 ---
 
-## Phase 3: Expiration Prediction (ML)
+## Phase 3: Basic Recipe Search (MVP Complete) ✅ COMPLETED
+
+**Goal**: Recipe search and ingredient-based filtering
+
+### Backend Tasks
+- [x] Integrate Spoonacular API
+- [x] Create recipe search endpoint
+- [x] Implement ingredient-based recipe search
+- [x] Create "Use Expiring Items" recipe filter
+- [x] Cache popular recipes
+- [x] Create recipe detail endpoint
+- [ ] Track recipe interactions (views, saves)
+- [x] Store user's saved/favorite recipes (iOS local with SwiftData)
+
+### Backend Files Created (Actual)
+- `backend/app/services/spoonacular_service.py` — Spoonacular API integration with Redis caching
+- `backend/app/api/v1/endpoints/recipes.py` — Search, by-ingredients, expiring, and detail endpoints
+- `backend/app/api/v1/schemas/recipe.py` — Recipe response schemas
+
+### iOS Tasks
+- [x] Create `Recipe` domain model
+- [x] Create `RecipeAPIService` for backend communication
+- [x] Build `RecipeListView` with search
+- [x] Build `RecipeDetailView` with ingredients and instructions
+- [x] Implement recipe filtering (by ingredients, diet, time)
+- [x] Build `RecipeCard` component
+- [x] Add recipe saving/favoriting
+- [ ] Create cooking completion flow (skipped for MVP)
+
+### iOS Files Created (Actual)
+- `FreshTrack/Models/Recipe.swift` — Recipe, RecipeDetail, RecipeByIngredient models
+- `FreshTrack/Models/SavedRecipe.swift` — SwiftData model for saved/favorited recipes
+- `FreshTrack/Services/RecipeAPIService.swift` — Spoonacular API service (direct call)
+- `FreshTrack/Views/RecipeListView.swift` — Recipe list with Saved, Search, My Ingredients, Expiring modes
+- `FreshTrack/Views/RecipeDetailView.swift` — Full recipe detail with save/unsave functionality
+- `FreshTrack/Components/RecipeCard.swift` — RecipeCard and RecipeByIngredientCard components
+
+### Notification Features (Added)
+- [x] Create `ExpirationNotificationService` for local notifications
+- [x] Request notification permissions on app launch
+- [x] Schedule notifications for expiring items (3 days, 1 day, and day-of)
+- [x] Category-specific notification messages with recipe/usage suggestions
+- [x] Notification actions: "Mark as Used", "Find Recipes"
+
+### Notification Files Created
+- `FreshTrack/Services/ExpirationNotificationService.swift` — Notification scheduling and management
+
+---
+
+## Phase 4: Expiration Prediction (ML)
 
 **Goal**: ML-powered expiration date prediction
 
@@ -144,57 +189,6 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 - `FreshTrack/Domain/Models/ExpirationPrediction.swift`
 - `FreshTrack/Domain/UseCases/ML/PredictExpirationUseCase.swift`
 - `FreshTrack/Data/Network/Services/MLSyncService.swift`
-
----
-
-## Phase 4: Basic Recipe Search (MVP Complete)
-
-**Goal**: Recipe search and ingredient-based filtering
-
-### Backend Tasks
-- [ ] Integrate Spoonacular API
-- [ ] Create recipe search endpoint
-- [ ] Implement ingredient-based recipe search
-- [ ] Create "Use Expiring Items" recipe filter
-- [ ] Cache popular recipes
-- [ ] Create recipe detail endpoint
-- [ ] Track recipe interactions (views, saves)
-- [ ] Store user's saved/favorite recipes
-
-### Backend Files to Create
-- `backend/app/services/spoonacular_service.py`
-- `backend/app/api/v1/endpoints/recipes.py`
-- `backend/app/api/v1/schemas/recipe.py`
-- `backend/app/db/models/recipe.py`
-- `backend/app/db/models/recipe_interaction.py`
-
-### iOS Tasks
-- [ ] Create `Recipe` domain model
-- [ ] Create `RecipeAPIService` for backend communication
-- [ ] Build `RecipeListView` with search
-- [ ] Build `RecipeDetailView` with ingredients and instructions
-- [ ] Create `RecipeListViewModel`
-- [ ] Implement recipe filtering (by ingredients, diet, time)
-- [ ] Add recipe saving/favoriting
-- [ ] Create cooking completion flow
-- [ ] Build `RecipeCard` component
-
-### iOS Files to Create
-- `FreshTrack/Domain/Models/Recipe.swift`
-- `FreshTrack/Domain/Models/Ingredient.swift`
-- `FreshTrack/Domain/UseCases/Recipe/SearchRecipesUseCase.swift`
-- `FreshTrack/Domain/UseCases/Recipe/GetRecipeRecommendationsUseCase.swift`
-- `FreshTrack/Domain/UseCases/Recipe/SaveRecipeUseCase.swift`
-- `FreshTrack/Domain/Repositories/RecipeRepositoryProtocol.swift`
-- `FreshTrack/Data/Repositories/RecipeRepository.swift`
-- `FreshTrack/Data/Network/Services/RecipeAPIService.swift`
-- `FreshTrack/Data/Network/DTOs/RecipeDTO.swift`
-- `FreshTrack/Data/SwiftData/Models/RecipeEntity.swift`
-- `FreshTrack/Presentation/Screens/Recipes/RecipeListView.swift`
-- `FreshTrack/Presentation/Screens/Recipes/RecipeListViewModel.swift`
-- `FreshTrack/Presentation/Screens/Recipes/RecipeDetailView.swift`
-- `FreshTrack/Presentation/Screens/Recipes/RecipeFilterView.swift`
-- `FreshTrack/Presentation/Components/RecipeCard.swift`
 
 ---
 
@@ -356,7 +350,7 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 
 | Service | Purpose | Required Phase |
 |---------|---------|----------------|
-| Spoonacular | Recipe database | Phase 4 |
+| Spoonacular | Recipe database | Phase 3 |
 | Open Food Facts | Barcode lookup | Phase 2 |
 | Apple Developer | App Store, APNs | Phase 6 |
 | AWS/GCP (optional) | Production hosting | Phase 6 |

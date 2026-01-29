@@ -23,7 +23,7 @@ actor BarcodeAPIService {
     }
 
     /// Look up a barcode and return a ScannedProduct if found.
-    nonisolated func lookupBarcode(_ barcode: String) async throws -> ScannedProduct? {
+    func lookupBarcode(_ barcode: String) async throws -> ScannedProduct? {
         let url = baseURL.appendingPathComponent(barcode)
         var request = URLRequest(url: url)
         request.setValue("FreshTrack iOS App - github.com/princemarcelle", forHTTPHeaderField: "User-Agent")
@@ -46,7 +46,7 @@ actor BarcodeAPIService {
             return nil
         }
 
-        return product.toScannedProduct(barcode: barcode)
+        return OpenFoodFactsProduct.createScannedProduct(from: product, barcode: barcode)
     }
 }
 
@@ -74,19 +74,19 @@ struct OpenFoodFactsProduct: Decodable, Sendable {
         case imageFrontUrl = "image_front_url"
     }
 
-    func toScannedProduct(barcode: String) -> ScannedProduct {
-        let category = mapCategory(from: categoriesTags ?? [])
+    static func createScannedProduct(from product: OpenFoodFactsProduct, barcode: String) -> ScannedProduct {
+        let category = mapCategory(from: product.categoriesTags ?? [])
         return ScannedProduct(
             barcode: barcode,
-            name: productName,
-            brand: brands,
+            name: product.productName,
+            brand: product.brands,
             suggestedCategory: category,
-            quantityString: quantity,
-            imageURL: imageFrontUrl
+            quantityString: product.quantity,
+            imageURL: product.imageFrontUrl
         )
     }
 
-    private func mapCategory(from tags: [String]) -> FoodCategory {
+    private static func mapCategory(from tags: [String]) -> FoodCategory {
         let mapping: [(keyword: String, category: FoodCategory)] = [
             ("dairy", .dairy), ("milk", .dairy), ("cheese", .dairy),
             ("yogurt", .dairy), ("butter", .dairy),

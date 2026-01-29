@@ -32,6 +32,12 @@ struct MainTabView: View {
                     Label("Pantry", systemImage: "refrigerator.fill")
                 }
                 .tag(2)
+
+            RecipeListView()
+                .tabItem {
+                    Label("Recipes", systemImage: "fork.knife")
+                }
+                .tag(3)
         }
     }
 }
