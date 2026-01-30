@@ -24,6 +24,8 @@
 		DCCC6A8E2F2AA3F0008E387D /* EditGroceryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A8D2F2AA3F0008E387D /* EditGroceryView.swift */; };
 		DCCC6A902F2AAB46008E387D /* ExpirationNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A8F2F2AAB46008E387D /* ExpirationNotificationService.swift */; };
 		DCCC6A922F2AAB7D008E387D /* SavedRecipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A912F2AAB7D008E387D /* SavedRecipe.swift */; };
+		DCCC6A942F2AB000008E387D /* ExpirationPredictionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A932F2AB000008E387D /* ExpirationPredictionService.swift */; };
+		DCCC6A962F2AB010008E387D /* ExpirationPredictor.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A952F2AB010008E387D /* ExpirationPredictor.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,8 @@
 		DCCC6A8D2F2AA3F0008E387D /* EditGroceryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGroceryView.swift; sourceTree = "<group>"; };
 		DCCC6A8F2F2AAB46008E387D /* ExpirationNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationNotificationService.swift; sourceTree = "<group>"; };
 		DCCC6A912F2AAB7D008E387D /* SavedRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipe.swift; sourceTree = "<group>"; };
+		DCCC6A932F2AB000008E387D /* ExpirationPredictionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpirationPredictionService.swift; sourceTree = "<group>"; };
+		DCCC6A952F2AB010008E387D /* ExpirationPredictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ExpirationPredictor.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -120,6 +124,7 @@
 				DCCC6A072F281F07008E387D /* FreshTrackUITests */,
 				DCCC69EC2F281F05008E387D /* Products */,
 				DCCC6A4C2F29907A008E387D /* Services */,
+				DCCC6A972F2AB020008E387D /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -174,8 +179,17 @@
 				DCCC6A4B2F29907A008E387D /* BarcodeAPIService.swift */,
 				DCCC6A8A2F2A9BA3008E387D /* RecipeAPIService.swift */,
 				DCCC6A8F2F2AAB46008E387D /* ExpirationNotificationService.swift */,
+				DCCC6A932F2AB000008E387D /* ExpirationPredictionService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		DCCC6A972F2AB020008E387D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DCCC6A952F2AB010008E387D /* ExpirationPredictor.mlmodel */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,6 +353,8 @@
 				DCCC6A902F2AAB46008E387D /* ExpirationNotificationService.swift in Sources */,
 				DCCC6A832F2A9B39008E387D /* Recipe.swift in Sources */,
 				DCCC6A892F2A9B7C008E387D /* RecipeCard.swift in Sources */,
+				DCCC6A942F2AB000008E387D /* ExpirationPredictionService.swift in Sources */,
+				DCCC6A962F2AB010008E387D /* ExpirationPredictor.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

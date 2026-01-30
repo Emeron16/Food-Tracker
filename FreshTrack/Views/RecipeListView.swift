@@ -417,11 +417,11 @@ struct RecipeListView: View {
     }
 
     private var expiringIngredients: [String] {
-        let threeDaysFromNow = Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
+        let sevenDaysFromNow = Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
         return groceries
             .filter { grocery in
                 let expDate = grocery.expirationDate ?? grocery.predictedExpirationDate ?? Date.distantFuture
-                return expDate <= threeDaysFromNow
+                return expDate <= sevenDaysFromNow
             }
             .map { $0.name }
     }

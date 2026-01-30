@@ -21,8 +21,26 @@ struct HomeView: View {
     ) private var consumedGroceries: [Grocery]
 
     @State private var showingAddGrocery = false
+    @State private var selectedStorageLocation: StorageLocation?
+    @State private var selectedCategory: FoodCategory?
+    @State private var showingTotalItems = false
+    @State private var showingExpiringSoon = false
+    @State private var showingExpired = false
+    @State private var showingConsumed = false
 
     // MARK: - Computed Properties
+
+    /// Get groceries filtered by storage location
+    private func groceries(for location: StorageLocation) -> [Grocery] {
+        activeGroceries.filter { $0.storageLocation == location }
+            .sorted { ($0.daysUntilExpiration ?? 999) < ($1.daysUntilExpiration ?? 999) }
+    }
+
+    /// Get groceries filtered by category
+    private func groceries(for category: FoodCategory) -> [Grocery] {
+        activeGroceries.filter { $0.category == category }
+            .sorted { ($0.daysUntilExpiration ?? 999) < ($1.daysUntilExpiration ?? 999) }
+    }
 
     private var expiringSoonItems: [Grocery] {
         activeGroceries.filter {
@@ -115,6 +133,24 @@ struct HomeView: View {
             .sheet(isPresented: $showingAddGrocery) {
                 AddGroceryView()
             }
+            .sheet(item: $selectedStorageLocation) { location in
+                StorageDetailSheet(location: location)
+            }
+            .sheet(item: $selectedCategory) { category in
+                CategoryDetailSheet(category: category, categoryColor: categoryColor(for: category))
+            }
+            .sheet(isPresented: $showingTotalItems) {
+                TotalItemsSheet()
+            }
+            .sheet(isPresented: $showingExpiringSoon) {
+                ExpiringSoonSheet()
+            }
+            .sheet(isPresented: $showingExpired) {
+                ExpiredItemsSheet()
+            }
+            .sheet(isPresented: $showingConsumed) {
+                ConsumedItemsSheet()
+            }
         }
     }
 
@@ -125,30 +161,53 @@ struct HomeView: View {
             GridItem(.flexible()),
             GridItem(.flexible())
         ], spacing: 12) {
-            StatCard(
-                title: "Total Items",
-                value: "\(activeGroceries.count)",
-                icon: "refrigerator.fill",
-                color: .blue
-            )
-            StatCard(
-                title: "Expiring Soon",
-                value: "\(expiringSoonItems.count)",
-                icon: "exclamationmark.triangle.fill",
-                color: expiringSoonItems.isEmpty ? .green : .orange
-            )
-            StatCard(
-                title: "Expired",
-                value: "\(expiredItems.count)",
-                icon: "xmark.circle.fill",
-                color: expiredItems.isEmpty ? .green : .red
-            )
-            StatCard(
-                title: "Consumed",
-                value: "\(consumedGroceries.count)",
-                icon: "checkmark.circle.fill",
-                color: .green
-            )
+            Button {
+                showingTotalItems = true
+            } label: {
+                StatCard(
+                    title: "Total Items",
+                    value: "\(activeGroceries.count)",
+                    icon: "refrigerator.fill",
+                    color: .blue
+                )
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                showingExpiringSoon = true
+            } label: {
+                StatCard(
+                    title: "Expiring Soon",
+                    value: "\(expiringSoonItems.count)",
+                    icon: "exclamationmark.triangle.fill",
+                    color: expiringSoonItems.isEmpty ? .green : .orange
+                )
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                showingExpired = true
+            } label: {
+                StatCard(
+                    title: "Expired",
+                    value: "\(expiredItems.count)",
+                    icon: "xmark.circle.fill",
+                    color: expiredItems.isEmpty ? .green : .red
+                )
+            }
+            .buttonStyle(.plain)
+
+            Button {
+                showingConsumed = true
+            } label: {
+                StatCard(
+                    title: "Consumed",
+                    value: "\(consumedGroceries.count)",
+                    icon: "checkmark.circle.fill",
+                    color: .green
+                )
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -272,22 +331,33 @@ struct HomeView: View {
 
             VStack(spacing: 0) {
                 ForEach(storageBreakdown, id: \.location) { item in
-                    HStack(spacing: 12) {
-                        Image(systemName: item.location.icon)
-                            .foregroundStyle(.tint)
-                            .frame(width: 24)
+                    Button {
+                        selectedStorageLocation = item.location
+                    } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: item.location.icon)
+                                .foregroundStyle(.tint)
+                                .frame(width: 24)
 
-                        Text(item.location.rawValue)
+                            Text(item.location.rawValue)
+                                .foregroundStyle(.primary)
 
-                        Spacer()
+                            Spacer()
 
-                        Text("\(item.count)")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.secondary)
+                            Text("\(item.count)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+
+                            Image(systemName: "chevron.right")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                        }
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .contentShape(Rectangle())
                     }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
+                    .buttonStyle(.plain)
 
                     if item.location != storageBreakdown.last?.location {
                         Divider()
@@ -312,23 +382,29 @@ struct HomeView: View {
                 GridItem(.flexible())
             ], spacing: 8) {
                 ForEach(categoryBreakdown.prefix(6), id: \.category) { item in
-                    VStack(spacing: 6) {
-                        Image(systemName: item.category.icon)
-                            .font(.title3)
-                            .foregroundStyle(categoryColor(for: item.category))
+                    Button {
+                        selectedCategory = item.category
+                    } label: {
+                        VStack(spacing: 6) {
+                            Image(systemName: item.category.icon)
+                                .font(.title3)
+                                .foregroundStyle(categoryColor(for: item.category))
 
-                        Text(item.category.rawValue)
-                            .font(.caption)
-                            .lineLimit(1)
+                            Text(item.category.rawValue)
+                                .font(.caption)
+                                .lineLimit(1)
+                                .foregroundStyle(.primary)
 
-                        Text("\(item.count)")
-                            .font(.caption2)
-                            .fontWeight(.bold)
-                            .foregroundStyle(.secondary)
+                            Text("\(item.count)")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(.background, in: RoundedRectangle(cornerRadius: 8))
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .background(.background, in: RoundedRectangle(cornerRadius: 8))
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -431,10 +507,452 @@ struct StatCard: View {
     }
 }
 
+// MARK: - Storage Detail Sheet
+
+struct StorageDetailSheet: View {
+    let location: StorageLocation
+    @Environment(\.dismiss) private var dismiss
+    @Query(
+        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        sort: \Grocery.purchaseDate,
+        order: .reverse
+    ) private var allGroceries: [Grocery]
+
+    init(location: StorageLocation) {
+        self.location = location
+    }
+
+    private var groceries: [Grocery] {
+        allGroceries.filter { $0.storageLocation == location }
+            .sorted { ($0.daysUntilExpiration ?? 999) < ($1.daysUntilExpiration ?? 999) }
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if groceries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Items", systemImage: location.icon)
+                    } description: {
+                        Text("No groceries stored in \(location.rawValue.lowercased()).")
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(groceries) { grocery in
+                        HStack(spacing: 12) {
+                            Image(systemName: grocery.category.icon)
+                                .foregroundStyle(.tint)
+                                .frame(width: 24)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(grocery.name)
+                                    .lineLimit(1)
+                                Text(grocery.quantityDisplayText)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            if let days = grocery.daysUntilExpiration {
+                                ExpirationBadge(days: days, status: grocery.expirationStatus)
+                            }
+                        }
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle(location.rawValue)
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+#if os(iOS)
+        .presentationDetents([.medium, .large])
+#else
+        .frame(minWidth: 400, minHeight: 300)
+#endif
+    }
+}
+
+// MARK: - Category Detail Sheet
+
+struct CategoryDetailSheet: View {
+    let category: FoodCategory
+    let categoryColor: Color
+    @Environment(\.dismiss) private var dismiss
+    @Query(
+        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        sort: \Grocery.purchaseDate,
+        order: .reverse
+    ) private var allGroceries: [Grocery]
+
+    init(category: FoodCategory, categoryColor: Color) {
+        self.category = category
+        self.categoryColor = categoryColor
+    }
+
+    private var groceries: [Grocery] {
+        allGroceries.filter { $0.category == category }
+            .sorted { ($0.daysUntilExpiration ?? 999) < ($1.daysUntilExpiration ?? 999) }
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if groceries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Items", systemImage: category.icon)
+                    } description: {
+                        Text("No \(category.rawValue.lowercased()) items in your pantry.")
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(groceries) { grocery in
+                        HStack(spacing: 12) {
+                            Image(systemName: grocery.storageLocation.icon)
+                                .foregroundStyle(categoryColor)
+                                .frame(width: 24)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(grocery.name)
+                                    .lineLimit(1)
+                                HStack(spacing: 4) {
+                                    Text(grocery.quantityDisplayText)
+                                    Text("·")
+                                    Text(grocery.storageLocation.rawValue)
+                                }
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            if let days = grocery.daysUntilExpiration {
+                                ExpirationBadge(days: days, status: grocery.expirationStatus)
+                            }
+                        }
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle(category.rawValue)
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+#if os(iOS)
+        .presentationDetents([.medium, .large])
+#else
+        .frame(minWidth: 400, minHeight: 300)
+#endif
+    }
+}
+
+// MARK: - Total Items Sheet
+
+struct TotalItemsSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Query(
+        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        sort: \Grocery.purchaseDate,
+        order: .reverse
+    ) private var groceries: [Grocery]
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if groceries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Items", systemImage: "refrigerator")
+                    } description: {
+                        Text("Your pantry is empty. Add some groceries to get started.")
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(groceries) { grocery in
+                        GroceryItemRow(grocery: grocery)
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("All Items (\(groceries.count))")
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+#if os(iOS)
+        .presentationDetents([.medium, .large])
+#else
+        .frame(minWidth: 400, minHeight: 300)
+#endif
+    }
+}
+
+// MARK: - Expiring Soon Sheet
+
+struct ExpiringSoonSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Query(
+        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        sort: \Grocery.expirationDate
+    ) private var allGroceries: [Grocery]
+
+    private var expiringSoonGroceries: [Grocery] {
+        allGroceries.filter {
+            $0.expirationStatus == .critical || $0.expirationStatus == .warning
+        }.sorted {
+            ($0.daysUntilExpiration ?? 999) < ($1.daysUntilExpiration ?? 999)
+        }
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if expiringSoonGroceries.isEmpty {
+                    ContentUnavailableView {
+                        Label("Nothing Expiring Soon", systemImage: "checkmark.circle")
+                    } description: {
+                        Text("Great news! None of your items are expiring soon.")
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(expiringSoonGroceries) { grocery in
+                        GroceryItemRow(grocery: grocery)
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("Expiring Soon (\(expiringSoonGroceries.count))")
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+#if os(iOS)
+        .presentationDetents([.medium, .large])
+#else
+        .frame(minWidth: 400, minHeight: 300)
+#endif
+    }
+}
+
+// MARK: - Expired Items Sheet
+
+struct ExpiredItemsSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Query(
+        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        sort: \Grocery.expirationDate
+    ) private var allGroceries: [Grocery]
+
+    private var expiredGroceries: [Grocery] {
+        allGroceries.filter { $0.expirationStatus == .expired }
+            .sorted { ($0.daysUntilExpiration ?? 0) < ($1.daysUntilExpiration ?? 0) }
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if expiredGroceries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Expired Items", systemImage: "checkmark.circle")
+                    } description: {
+                        Text("Great job! You don't have any expired items.")
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(expiredGroceries) { grocery in
+                        GroceryItemRow(grocery: grocery)
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("Expired (\(expiredGroceries.count))")
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+#if os(iOS)
+        .presentationDetents([.medium, .large])
+#else
+        .frame(minWidth: 400, minHeight: 300)
+#endif
+    }
+}
+
+// MARK: - Consumed Items Sheet
+
+struct ConsumedItemsSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Query(
+        filter: #Predicate<Grocery> { $0.consumedDate != nil },
+        sort: \Grocery.consumedDate,
+        order: .reverse
+    ) private var consumedGroceries: [Grocery]
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if consumedGroceries.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Consumed Items", systemImage: "checkmark.circle")
+                    } description: {
+                        Text("Items you mark as consumed will appear here.")
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                } else {
+                    ForEach(consumedGroceries) { grocery in
+                        HStack(spacing: 12) {
+                            Image(systemName: grocery.category.icon)
+                                .foregroundStyle(.green)
+                                .frame(width: 24)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(grocery.name)
+                                    .lineLimit(1)
+                                HStack(spacing: 4) {
+                                    Text(grocery.quantityDisplayText)
+                                    Text("·")
+                                    Text(grocery.storageLocation.rawValue)
+                                }
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            if let consumedDate = grocery.consumedDate {
+                                Text(consumedDate, style: .date)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("Consumed (\(consumedGroceries.count))")
+#if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+#endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+#if os(iOS)
+        .presentationDetents([.medium, .large])
+#else
+        .frame(minWidth: 400, minHeight: 300)
+#endif
+    }
+}
+
+// MARK: - Grocery Item Row (Reusable)
+
+struct GroceryItemRow: View {
+    let grocery: Grocery
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: grocery.category.icon)
+                .foregroundStyle(.tint)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(grocery.name)
+                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(grocery.quantityDisplayText)
+                    Text("·")
+                    Text(grocery.storageLocation.rawValue)
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            if let days = grocery.daysUntilExpiration {
+                ExpirationBadge(days: days, status: grocery.expirationStatus)
+            }
+        }
+    }
+}
+
+// MARK: - Expiration Badge
+
+struct ExpirationBadge: View {
+    let days: Int
+    let status: ExpirationStatus
+
+    var body: some View {
+        Text(badgeText)
+            .font(.caption)
+            .fontWeight(.medium)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(badgeColor.opacity(0.15))
+            .foregroundStyle(badgeColor)
+            .clipShape(Capsule())
+    }
+
+    private var badgeText: String {
+        switch days {
+        case ..<0: return "\(abs(days))d ago"
+        case 0: return "Today"
+        case 1: return "Tomorrow"
+        default: return "\(days) days"
+        }
+    }
+
+    private var badgeColor: Color {
+        switch status {
+        case .expired: return .gray
+        case .critical: return .red
+        case .warning: return .orange
+        case .fresh: return .green
+        case .unknown: return .secondary
+        }
+    }
+}
+
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Grocery.self, configurations: config)
-    
+
     return HomeView()
         .modelContainer(container)
 }

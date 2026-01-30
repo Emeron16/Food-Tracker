@@ -12,6 +12,8 @@ struct EditGroceryView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var grocery: Grocery
 
+    @StateObject private var predictionService = ExpirationPredictionService.shared
+
     @State private var name: String
     @State private var category: FoodCategory
     @State private var storageLocation: StorageLocation
@@ -112,12 +114,20 @@ struct EditGroceryView: View {
                         HStack {
                             Text("Estimated Expiration")
                             Spacer()
-                            Text(estimatedExpirationDate, style: .date)
+                            Text(currentPrediction.expirationDate, style: .date)
                                 .foregroundStyle(.secondary)
                         }
-                        Text("Based on \(category.rawValue) default (\(category.defaultExpirationDays) days)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 4) {
+                            Image(systemName: predictionService.isModelLoaded ? "brain" : "clock")
+                                .font(.caption)
+                                .foregroundStyle(predictionService.isModelLoaded ? .purple : .secondary)
+                            Text(predictionService.isModelLoaded ? "ML Prediction" : "Estimated")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text("(\(Int(currentPrediction.confidenceScore * 100))% confident)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
 
@@ -185,8 +195,18 @@ struct EditGroceryView: View {
 
     // MARK: - Computed Properties
 
+    /// Current ML prediction based on selected category and storage location.
+    private var currentPrediction: ExpirationPrediction {
+        predictionService.predict(
+            category: category,
+            storageLocation: storageLocation,
+            purchaseDate: purchaseDate
+        )
+    }
+
+    /// Estimated expiration date from ML prediction.
     private var estimatedExpirationDate: Date {
-        purchaseDate.addingTimeInterval(Double(category.defaultExpirationDays) * 24 * 60 * 60)
+        currentPrediction.expirationDate
     }
 
     // MARK: - Save Changes
@@ -206,9 +226,10 @@ struct EditGroceryView: View {
             grocery.predictedExpirationDate = nil
             grocery.confidenceScore = nil
         } else {
+            let prediction = currentPrediction
             grocery.expirationDate = nil
-            grocery.predictedExpirationDate = estimatedExpirationDate
-            grocery.confidenceScore = 0.75
+            grocery.predictedExpirationDate = prediction.expirationDate
+            grocery.confidenceScore = prediction.confidenceScore
         }
 
         // Notify to refresh notifications

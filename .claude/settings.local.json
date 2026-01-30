@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(swift:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(gem list:*)"
     ]
   }
 }

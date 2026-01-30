@@ -141,54 +141,43 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 
 ---
 
-## Phase 4: Expiration Prediction (ML)
+## Phase 4: Expiration Prediction (ML) ✅ COMPLETED
 
-**Goal**: ML-powered expiration date prediction
+**Goal**: ML-powered expiration date prediction (on-device Core ML)
 
 ### Data Preparation Tasks
-- [ ] Collect USDA FoodKeeper baseline data
-- [ ] Clean and preprocess training data
-- [ ] Engineer features (category encoding, seasonality, storage type)
-- [ ] Create train/validation/test splits
-- [ ] Build data pipeline for continuous learning
+- [x] Collect USDA FoodKeeper baseline data
+- [x] Clean and preprocess training data
+- [x] Engineer features (category encoding, storage type)
+- [x] Create train/validation/test splits
+- [ ] Build data pipeline for continuous learning (Post-MVP)
 
-### Backend ML Tasks
-- [ ] Implement XGBoost expiration prediction model
-- [ ] Train model on baseline data
-- [ ] Evaluate model accuracy (MAE, RMSE)
-- [ ] Export model to Core ML format using coremltools
-- [ ] Create model versioning system
-- [ ] Set up model hosting (S3 or Cloud Storage)
-- [ ] Create endpoint for model metadata and download
+### iOS ML Tasks (Local Core ML - No Backend Required)
+- [x] Create training data JSON with food storage guidelines
+- [x] Train Boosted Tree Regressor using Create ML
+- [x] Export model to Core ML format (.mlmodel)
+- [x] Implement `ExpirationPredictionService` with model loading
+- [x] Integrate prediction into `AddGroceryView`
+- [x] Integrate prediction into `EditGroceryView`
+- [x] Display confidence scores in UI
+- [x] Handle prediction errors with fallback logic
 
-### Backend Files to Create
-- `backend/app/ml/data/food_keeper_data.json`
-- `backend/app/ml/data/preprocessor.py`
-- `backend/app/ml/data/feature_engineering.py`
-- `backend/app/ml/training/train_expiration.py`
-- `backend/app/ml/training/evaluate_model.py`
-- `backend/app/ml/training/export_coreml.py`
-- `backend/app/api/v1/endpoints/ml.py`
-- `backend/app/api/v1/schemas/ml.py`
+### iOS Files Created
+- `FreshTrack/Resources/ExpirationTrainingData.json` — Training data (122 samples)
+- `FreshTrack/Resources/ExpirationPredictor.mlmodel` — Trained Core ML model
+- `FreshTrack/Resources/TrainExpirationModel.swift` — Model training script
+- `FreshTrack/Services/ExpirationPredictionService.swift` — ML service with fallback
 
-### iOS Tasks
-- [ ] Create `CoreMLManager` for model loading
-- [ ] Implement `ExpirationPredictionService`
-- [ ] Create `PredictExpirationUseCase`
-- [ ] Integrate prediction into `AddGroceryView`
-- [ ] Display confidence scores in UI
-- [ ] Implement model update checking
-- [ ] Download and cache ML models
-- [ ] Handle prediction errors gracefully
+### iOS Files Modified
+- `FreshTrack/Views/ViewsAddGroceryView.swift` — ML prediction integration
+- `FreshTrack/Views/EditGroceryView.swift` — ML prediction integration
 
-### iOS Files to Create
-- `FreshTrack/Infrastructure/ML/CoreMLManager.swift`
-- `FreshTrack/Infrastructure/ML/ExpirationPredictionService.swift`
-- `FreshTrack/Infrastructure/ML/ModelUpdateManager.swift`
-- `FreshTrack/Infrastructure/ML/Models/ExpirationPredictor.mlmodel`
-- `FreshTrack/Domain/Models/ExpirationPrediction.swift`
-- `FreshTrack/Domain/UseCases/ML/PredictExpirationUseCase.swift`
-- `FreshTrack/Data/Network/Services/MLSyncService.swift`
+### Model Details
+- **Algorithm**: Boosted Tree Regressor (Create ML)
+- **Inputs**: category (String), storageLocation (String)
+- **Output**: expirationDays (Double)
+- **Training Samples**: 122 (11 categories × 4 storage locations)
+- **Confidence Scores**: Pre-calculated per category-storage combination (60%-95%)
 
 ---
 

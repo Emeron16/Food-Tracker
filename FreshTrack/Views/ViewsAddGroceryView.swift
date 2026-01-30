@@ -12,6 +12,8 @@ struct AddGroceryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
+    @StateObject private var predictionService = ExpirationPredictionService.shared
+
     @State private var name: String
     @State private var category: FoodCategory
     @State private var storageLocation: StorageLocation
@@ -83,11 +85,7 @@ struct AddGroceryView: View {
                     }
                     .onChange(of: category) { _, newCategory in
                         storageLocation = Grocery.suggestedStorageLocation(for: newCategory)
-                        if !hasExpirationDate {
-                            expirationDate = purchaseDate.addingTimeInterval(
-                                Double(newCategory.defaultExpirationDays) * 24 * 60 * 60
-                            )
-                        }
+                        // ML prediction updates automatically via computed property
                     }
 
                     Picker("Storage Location", selection: $storageLocation) {
@@ -142,13 +140,7 @@ struct AddGroceryView: View {
 
                 Section("Dates") {
                     DatePicker("Purchase Date", selection: $purchaseDate, displayedComponents: .date)
-                        .onChange(of: purchaseDate) { _, newDate in
-                            if !hasExpirationDate {
-                                expirationDate = newDate.addingTimeInterval(
-                                    Double(category.defaultExpirationDays) * 24 * 60 * 60
-                                )
-                            }
-                        }
+                    // ML prediction updates automatically via computed property when purchaseDate changes
 
                     Toggle("Set Expiration Date", isOn: $hasExpirationDate)
 
@@ -158,12 +150,20 @@ struct AddGroceryView: View {
                         HStack {
                             Text("Estimated Expiration")
                             Spacer()
-                            Text(estimatedExpirationDate, style: .date)
+                            Text(currentPrediction.expirationDate, style: .date)
                                 .foregroundStyle(.secondary)
                         }
-                        Text("Based on \(category.rawValue) default (\(category.defaultExpirationDays) days)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 4) {
+                            Image(systemName: predictionService.isModelLoaded ? "brain" : "clock")
+                                .font(.caption)
+                                .foregroundStyle(predictionService.isModelLoaded ? .purple : .secondary)
+                            Text(predictionService.isModelLoaded ? "ML Prediction" : "Estimated")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text("(\(Int(currentPrediction.confidenceScore * 100))% confident)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
 
@@ -219,8 +219,18 @@ struct AddGroceryView: View {
 
     // MARK: - Computed Properties
 
+    /// Current ML prediction based on selected category and storage location.
+    private var currentPrediction: ExpirationPrediction {
+        predictionService.predict(
+            category: category,
+            storageLocation: storageLocation,
+            purchaseDate: purchaseDate
+        )
+    }
+
+    /// Estimated expiration date from ML prediction.
     private var estimatedExpirationDate: Date {
-        purchaseDate.addingTimeInterval(Double(category.defaultExpirationDays) * 24 * 60 * 60)
+        currentPrediction.expirationDate
     }
 
     // MARK: - Quick Add Grid
@@ -268,6 +278,8 @@ struct AddGroceryView: View {
     // MARK: - Save
 
     private func saveGrocery() {
+        let prediction = currentPrediction
+
         let newGrocery = Grocery(
             name: name.trimmingCharacters(in: .whitespaces),
             category: category,
@@ -276,8 +288,8 @@ struct AddGroceryView: View {
             unit: unit,
             purchaseDate: purchaseDate,
             expirationDate: hasExpirationDate ? expirationDate : nil,
-            predictedExpirationDate: hasExpirationDate ? nil : estimatedExpirationDate,
-            confidenceScore: hasExpirationDate ? nil : 0.75,
+            predictedExpirationDate: hasExpirationDate ? nil : prediction.expirationDate,
+            confidenceScore: hasExpirationDate ? nil : prediction.confidenceScore,
             barcode: barcode,
             notes: notes.isEmpty ? nil : notes
         )
