@@ -173,6 +173,7 @@ final class Grocery {
     // Barcode & external
     var barcode: String?
     var notes: String?
+    var productImageURL: String?
     @Attribute(.externalStorage) var imageData: Data?
 
     // ML prediction metadata
@@ -279,6 +280,7 @@ final class Grocery {
         confidenceScore: Double? = nil,
         barcode: String? = nil,
         notes: String? = nil,
+        productImageURL: String? = nil,
         isConsumed: Bool = false,
         consumedDate: Date? = nil
     ) {
@@ -293,6 +295,7 @@ final class Grocery {
         self.confidenceScore = confidenceScore
         self.barcode = barcode
         self.notes = notes
+        self.productImageURL = productImageURL
         self.isConsumed = isConsumed
         self.consumedDate = consumedDate
         self.createdAt = Date()

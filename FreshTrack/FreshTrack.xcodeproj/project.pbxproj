@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC0DEE122F6B6C0B00705F5D /* RecipeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE112F6B6C0B00705F5D /* RecipeInteraction.swift */; };
+		DC0DEE142F6B6C7F00705F5D /* InteractionTrackingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE132F6B6C7F00705F5D /* InteractionTrackingService.swift */; };
+		DC0DEE162F6B6CCC00705F5D /* RecipeRecommendationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE152F6B6CCC00705F5D /* RecipeRecommendationService.swift */; };
+		DC0DEE182F6B6CEE00705F5D /* RecommendationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE172F6B6CEE00705F5D /* RecommendationCard.swift */; };
+		DC0DEE1A2F6B885D00705F5D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE192F6B885D00705F5D /* SettingsView.swift */; };
+		DC0DEE1C2F6B88A000705F5D /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE1B2F6B88A000705F5D /* OnboardingView.swift */; };
+		DC0DEE1E2F6B88C000705F5D /* MealTimeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE1D2F6B88C000705F5D /* MealTimeSettings.swift */; };
+		DC0DEE202F6C327700705F5D /* AmazonAffiliateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE1F2F6C327700705F5D /* AmazonAffiliateService.swift */; };
 		DCCC6A222F28232D008E387D /* ModelsGrocery.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A212F28232D008E387D /* ModelsGrocery.swift */; };
 		DCCC6A262F28233C008E387D /* ViewsAddGroceryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */; };
 		DCCC6A282F282343008E387D /* ComponentsGroceryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A272F282343008E387D /* ComponentsGroceryRowView.swift */; };
@@ -46,6 +54,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DC0DEE112F6B6C0B00705F5D /* RecipeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeInteraction.swift; sourceTree = "<group>"; };
+		DC0DEE132F6B6C7F00705F5D /* InteractionTrackingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTrackingService.swift; sourceTree = "<group>"; };
+		DC0DEE152F6B6CCC00705F5D /* RecipeRecommendationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRecommendationService.swift; sourceTree = "<group>"; };
+		DC0DEE172F6B6CEE00705F5D /* RecommendationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationCard.swift; sourceTree = "<group>"; };
+		DC0DEE192F6B885D00705F5D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		DC0DEE1B2F6B88A000705F5D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		DC0DEE1D2F6B88C000705F5D /* MealTimeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealTimeSettings.swift; sourceTree = "<group>"; };
+		DC0DEE1F2F6C327700705F5D /* AmazonAffiliateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmazonAffiliateService.swift; sourceTree = "<group>"; };
 		DCCC69EB2F281F05008E387D /* FreshTrack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreshTrack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCCC69FA2F281F07008E387D /* FreshTrackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreshTrackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCCC6A042F281F07008E387D /* FreshTrackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreshTrackUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				DCCC6A212F28232D008E387D /* ModelsGrocery.swift */,
+				DC0DEE112F6B6C0B00705F5D /* RecipeInteraction.swift */,
 				DCCC6A2C2F293EE5008E387D /* PantryView.swift */,
 				DCCC6A4E2F299095008E387D /* ScannedProduct.swift */,
 				DCCC6A822F2A9B39008E387D /* Recipe.swift */,
@@ -154,6 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */,
+				DC0DEE192F6B885D00705F5D /* SettingsView.swift */,
+				DC0DEE1B2F6B88A000705F5D /* OnboardingView.swift */,
 				DCCC6A442F295420008E387D /* MainTabView.swift */,
 				DCCC6A462F295431008E387D /* HomeView.swift */,
 				DCCC6A492F299058008E387D /* BarcodeScannerView.swift */,
@@ -168,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				DCCC6A272F282343008E387D /* ComponentsGroceryRowView.swift */,
+				DC0DEE172F6B6CEE00705F5D /* RecommendationCard.swift */,
 				DCCC6A882F2A9B7C008E387D /* RecipeCard.swift */,
 			);
 			path = Components;
@@ -176,7 +196,11 @@
 		DCCC6A4C2F29907A008E387D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DC0DEE1F2F6C327700705F5D /* AmazonAffiliateService.swift */,
+				DC0DEE152F6B6CCC00705F5D /* RecipeRecommendationService.swift */,
 				DCCC6A4B2F29907A008E387D /* BarcodeAPIService.swift */,
+				DC0DEE1D2F6B88C000705F5D /* MealTimeSettings.swift */,
+				DC0DEE132F6B6C7F00705F5D /* InteractionTrackingService.swift */,
 				DCCC6A8A2F2A9BA3008E387D /* RecipeAPIService.swift */,
 				DCCC6A8F2F2AAB46008E387D /* ExpirationNotificationService.swift */,
 				DCCC6A932F2AB000008E387D /* ExpirationPredictionService.swift */,
@@ -337,6 +361,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCCC6A4D2F29907A008E387D /* BarcodeAPIService.swift in Sources */,
+				DC0DEE1E2F6B88C000705F5D /* MealTimeSettings.swift in Sources */,
+				DC0DEE122F6B6C0B00705F5D /* RecipeInteraction.swift in Sources */,
 				DCCC6A4A2F299058008E387D /* BarcodeScannerView.swift in Sources */,
 				DCCC6A222F28232D008E387D /* ModelsGrocery.swift in Sources */,
 				DCCC6A8B2F2A9BA3008E387D /* RecipeAPIService.swift in Sources */,
@@ -345,11 +371,17 @@
 				DCCC6A2D2F293EE5008E387D /* PantryView.swift in Sources */,
 				DCCC6A4F2F299095008E387D /* ScannedProduct.swift in Sources */,
 				DCCC6A852F2A9B53008E387D /* RecipeDetailView.swift in Sources */,
+				DC0DEE182F6B6CEE00705F5D /* RecommendationCard.swift in Sources */,
+				DC0DEE1C2F6B88A000705F5D /* OnboardingView.swift in Sources */,
 				DCCC6A282F282343008E387D /* ComponentsGroceryRowView.swift in Sources */,
 				DCCC6A262F28233C008E387D /* ViewsAddGroceryView.swift in Sources */,
 				DCCC6A452F295420008E387D /* MainTabView.swift in Sources */,
 				DCCC6A8E2F2AA3F0008E387D /* EditGroceryView.swift in Sources */,
+				DC0DEE1A2F6B885D00705F5D /* SettingsView.swift in Sources */,
+				DC0DEE142F6B6C7F00705F5D /* InteractionTrackingService.swift in Sources */,
+				DC0DEE202F6C327700705F5D /* AmazonAffiliateService.swift in Sources */,
 				DCCC6A872F2A9B65008E387D /* RecipeListView.swift in Sources */,
+				DC0DEE162F6B6CCC00705F5D /* RecipeRecommendationService.swift in Sources */,
 				DCCC6A902F2AAB46008E387D /* ExpirationNotificationService.swift in Sources */,
 				DCCC6A832F2A9B39008E387D /* Recipe.swift in Sources */,
 				DCCC6A892F2A9B7C008E387D /* RecipeCard.swift in Sources */,

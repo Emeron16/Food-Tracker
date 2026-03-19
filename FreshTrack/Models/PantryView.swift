@@ -8,22 +8,64 @@
 import SwiftUI
 import SwiftData
 
+enum PantrySortOption: String, CaseIterable {
+    case name           = "Name"
+    case dateAdded      = "Date Added"
+    case category       = "Category"
+    case storageLocation = "Storage Location"
+    case purchaseDate   = "Purchase Date"
+    case expirationDate = "Expiration Date"
+
+    var icon: String {
+        switch self {
+        case .name:            return "textformat.abc"
+        case .dateAdded:       return "calendar.badge.plus"
+        case .category:        return "square.grid.2x2"
+        case .storageLocation: return "archivebox"
+        case .purchaseDate:    return "cart"
+        case .expirationDate:  return "clock"
+        }
+    }
+}
+
 struct PantryView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(
         filter: #Predicate<Grocery> { !$0.isConsumed },
-        sort: \Grocery.purchaseDate,
+        sort: \Grocery.createdAt,
         order: .reverse
     ) private var groceries: [Grocery]
     @State private var showingAddGrocery = false
     @State private var searchText = ""
     @State private var groceryToEdit: Grocery?
+    @State private var sortOption: PantrySortOption = .dateAdded
+
+    private var sortedGroceries: [Grocery] {
+        groceries.sorted { a, b in
+            switch sortOption {
+            case .name:
+                return a.name.localizedCaseInsensitiveCompare(b.name) == .orderedAscending
+            case .dateAdded:
+                return a.createdAt > b.createdAt
+            case .category:
+                return a.category.rawValue.localizedCaseInsensitiveCompare(b.category.rawValue) == .orderedAscending
+            case .storageLocation:
+                return a.storageLocation.rawValue.localizedCaseInsensitiveCompare(b.storageLocation.rawValue) == .orderedAscending
+            case .purchaseDate:
+                return a.purchaseDate > b.purchaseDate
+            case .expirationDate:
+                let aDate = a.expirationDate ?? a.predictedExpirationDate ?? .distantFuture
+                let bDate = b.expirationDate ?? b.predictedExpirationDate ?? .distantFuture
+                return aDate < bDate
+            }
+        }
+    }
 
     private var filteredGroceries: [Grocery] {
         if searchText.isEmpty {
-            return groceries
+            return sortedGroceries
         }
-        return groceries.filter {
+        return sortedGroceries.filter {
             $0.name.localizedCaseInsensitiveContains(searchText)
         }
     }
@@ -44,9 +86,8 @@ struct PantryView: View {
                     Section {
                         ForEach(expiringItems.prefix(3)) { grocery in
                             GroceryRowView(grocery: grocery)
-                                .contextMenu {
-                                    contextMenuItems(for: grocery)
-                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture { groceryToEdit = grocery }
                         }
                     } header: {
                         HStack {
@@ -61,9 +102,8 @@ struct PantryView: View {
                 Section {
                     ForEach(filteredGroceries) { grocery in
                         GroceryRowView(grocery: grocery)
-                            .contextMenu {
-                                contextMenuItems(for: grocery)
-                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture { groceryToEdit = grocery }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     deleteGrocery(grocery)
@@ -93,6 +133,26 @@ struct PantryView: View {
             .navigationTitle("Pantry")
             .toolbar {
 #if os(iOS)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        ForEach(PantrySortOption.allCases, id: \.self) { option in
+                            Button {
+                                sortOption = option
+                            } label: {
+                                Label(option.rawValue, systemImage: option.icon)
+                                if sortOption == option {
+                                    Image(systemName: "checkmark")
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.up.arrow.down")
+                            Text(sortOption.rawValue)
+                                .font(.subheadline)
+                        }
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showingAddGrocery = true
@@ -137,7 +197,6 @@ struct PantryView: View {
 
     private func deleteGrocery(_ grocery: Grocery) {
         withAnimation {
-            // Remove notifications for this grocery
             ExpirationNotificationService.shared.removeNotifications(for: grocery)
             modelContext.delete(grocery)
         }
@@ -149,7 +208,6 @@ struct PantryView: View {
             grocery.isConsumed = true
             grocery.consumedDate = Date()
             grocery.updatedAt = Date()
-            // Remove notifications for consumed grocery
             ExpirationNotificationService.shared.removeNotifications(for: grocery)
         }
         notifyGroceriesChanged()
@@ -158,37 +216,12 @@ struct PantryView: View {
     private func notifyGroceriesChanged() {
         NotificationCenter.default.post(name: .groceriesDidChange, object: nil)
     }
-
-    // MARK: - Context Menu
-
-    @ViewBuilder
-    private func contextMenuItems(for grocery: Grocery) -> some View {
-        Button {
-            groceryToEdit = grocery
-        } label: {
-            Label("Edit", systemImage: "pencil")
-        }
-
-        Button {
-            markConsumed(grocery)
-        } label: {
-            Label("Mark as Used", systemImage: "checkmark.circle")
-        }
-
-        Divider()
-
-        Button(role: .destructive) {
-            deleteGrocery(grocery)
-        } label: {
-            Label("Delete", systemImage: "trash")
-        }
-    }
 }
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: Grocery.self, configurations: config)
-    
+
     return PantryView()
         .modelContainer(container)
 }

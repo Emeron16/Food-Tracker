@@ -24,6 +24,7 @@ struct AddGroceryView: View {
     @State private var expirationDate: Date
     @State private var notes: String
     @State private var barcode: String?
+    @State private var productImageURL: String?
 
     /// Default initializer (no pre-fill)
     init() {
@@ -54,6 +55,7 @@ struct AddGroceryView: View {
             ))
             _notes = State(initialValue: "")
             _barcode = State(initialValue: product.barcode)
+            _productImageURL = State(initialValue: product.imageURL)
         } else {
             _name = State(initialValue: "")
             _category = State(initialValue: .other)
@@ -65,6 +67,7 @@ struct AddGroceryView: View {
             _expirationDate = State(initialValue: Date().addingTimeInterval(7 * 24 * 60 * 60))
             _notes = State(initialValue: "")
             _barcode = State(initialValue: barcode)
+            _productImageURL = State(initialValue: nil)
         }
     }
 
@@ -291,7 +294,8 @@ struct AddGroceryView: View {
             predictedExpirationDate: hasExpirationDate ? nil : prediction.expirationDate,
             confidenceScore: hasExpirationDate ? nil : prediction.confidenceScore,
             barcode: barcode,
-            notes: notes.isEmpty ? nil : notes
+            notes: notes.isEmpty ? nil : notes,
+            productImageURL: productImageURL
         )
         modelContext.insert(newGrocery)
 

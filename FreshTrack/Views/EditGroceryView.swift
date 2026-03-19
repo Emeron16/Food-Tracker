@@ -7,6 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import SafariServices
+
+private struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    func makeUIViewController(context: Context) -> SFSafariViewController { SFSafariViewController(url: url) }
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
+}
 
 struct EditGroceryView: View {
     @Environment(\.dismiss) private var dismiss
@@ -23,6 +30,8 @@ struct EditGroceryView: View {
     @State private var hasExpirationDate: Bool
     @State private var expirationDate: Date
     @State private var notes: String
+    @State private var amazonURL: URL?
+    @State private var showingAmazon = false
 
     init(grocery: Grocery) {
         self.grocery = grocery
@@ -140,6 +149,29 @@ struct EditGroceryView: View {
 #endif
                 }
 
+                // Reorder on Amazon
+                if let url = AmazonAffiliateService.searchURL(for: name.trimmingCharacters(in: .whitespaces)), !name.trimmingCharacters(in: .whitespaces).isEmpty {
+                    Section {
+                        Button {
+                            amazonURL = url
+                            showingAmazon = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "cart.fill")
+                                    .foregroundStyle(.white)
+                                Text("Reorder on Amazon")
+                                    .fontWeight(.medium)
+                                    .foregroundStyle(.white)
+                                Spacer()
+                                Image(systemName: "arrow.up.right.square")
+                                    .foregroundStyle(.white)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        .listRowBackground(Color.orange)
+                    }
+                }
+
                 // Info section
                 Section {
                     if let barcode = grocery.barcode {
@@ -189,6 +221,11 @@ struct EditGroceryView: View {
                     .fontWeight(.semibold)
                 }
 #endif
+            }
+            .sheet(isPresented: $showingAmazon) {
+                if let url = amazonURL {
+                    SafariView(url: url)
+                }
             }
         }
     }

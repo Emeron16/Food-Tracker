@@ -48,9 +48,9 @@ class ExpirationNotificationService: ObservableObject {
     // MARK: - Schedule Notifications
 
     /// Schedule notifications for all groceries based on their expiration dates.
+    /// Fires at each of the user's enabled meal times (from MealTimeSettings).
     @MainActor
     func scheduleExpirationNotifications(for groceries: [Grocery]) async {
-        // First, remove all existing expiration notifications
         await removeAllExpirationNotifications()
 
         guard isAuthorized else {
@@ -58,35 +58,52 @@ class ExpirationNotificationService: ObservableObject {
             return
         }
 
-        for grocery in groceries {
-            // Skip consumed items
-            guard !grocery.isConsumed else { continue }
+        let mealTimes = MealTimeSettings.shared.activeMealTimes
 
+        // Fall back to 9am if user has disabled all meal times
+        let effectiveMealTimes = mealTimes.isEmpty
+            ? [(hour: 9, minute: 0, label: "morning")]
+            : mealTimes
+
+        for grocery in groceries {
+            guard !grocery.isConsumed else { continue }
             let expirationDate = grocery.expirationDate ?? grocery.predictedExpirationDate
             guard let expDate = expirationDate else { continue }
 
-            // Schedule notifications for different warning levels
-            await scheduleNotification(for: grocery, daysBeforeExpiration: 3, expirationDate: expDate)
-            await scheduleNotification(for: grocery, daysBeforeExpiration: 1, expirationDate: expDate)
-            await scheduleNotification(for: grocery, daysBeforeExpiration: 0, expirationDate: expDate)
+            for days in [3, 1, 0] {
+                for meal in effectiveMealTimes {
+                    await scheduleNotification(
+                        for: grocery,
+                        daysBeforeExpiration: days,
+                        expirationDate: expDate,
+                        hour: meal.hour,
+                        minute: meal.minute,
+                        mealLabel: meal.label
+                    )
+                }
+            }
         }
     }
 
-    /// Schedule a single notification for a grocery item.
-    private func scheduleNotification(for grocery: Grocery, daysBeforeExpiration: Int, expirationDate: Date) async {
+    /// Schedule a single notification for a grocery item at a specific meal time.
+    private func scheduleNotification(
+        for grocery: Grocery,
+        daysBeforeExpiration: Int,
+        expirationDate: Date,
+        hour: Int,
+        minute: Int,
+        mealLabel: String
+    ) async {
         let notificationDate = Calendar.current.date(byAdding: .day, value: -daysBeforeExpiration, to: expirationDate)!
 
-        // Don't schedule notifications in the past
         guard notificationDate > Date() else { return }
 
-        // Create a unique identifier based on grocery properties
         let groceryIdentifier = grocery.notificationIdentifier
-        let identifier = "\(groceryIdentifier)-\(daysBeforeExpiration)"
+        let identifier = "\(groceryIdentifier)-\(daysBeforeExpiration)-\(mealLabel)"
 
         let content = UNMutableNotificationContent()
         content.sound = .default
 
-        // Customize message based on days and category
         switch daysBeforeExpiration {
         case 0:
             content.title = "\(grocery.name) expires today!"
@@ -94,28 +111,21 @@ class ExpirationNotificationService: ObservableObject {
         case 1:
             content.title = "\(grocery.name) expires tomorrow"
             content.body = getExpirationMessage(for: grocery, urgency: .tomorrow)
-        case 3:
-            content.title = "\(grocery.name) expiring soon"
-            content.body = getExpirationMessage(for: grocery, urgency: .soon)
         default:
-            content.title = "\(grocery.name) expiring in \(daysBeforeExpiration) days"
+            content.title = "\(grocery.name) expiring soon"
             content.body = getExpirationMessage(for: grocery, urgency: .soon)
         }
 
-        // Add category identifier for actions
         content.categoryIdentifier = "EXPIRATION_REMINDER"
-
-        // Set user info for handling taps
         content.userInfo = [
             "groceryIdentifier": groceryIdentifier,
             "groceryName": grocery.name,
             "category": grocery.category.rawValue
         ]
 
-        // Schedule for 9 AM on the notification date
         var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: notificationDate)
-        dateComponents.hour = 9
-        dateComponents.minute = 0
+        dateComponents.hour   = hour
+        dateComponents.minute = minute
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -265,14 +275,16 @@ class ExpirationNotificationService: ObservableObject {
         notificationCenter.removePendingNotificationRequests(withIdentifiers: expirationIds)
     }
 
-    /// Remove notifications for a specific grocery item.
+    /// Remove notifications for a specific grocery item across all meal times.
     func removeNotifications(for grocery: Grocery) {
-        let groceryIdentifier = grocery.notificationIdentifier
-        let identifiers = [
-            "\(groceryIdentifier)-0",
-            "\(groceryIdentifier)-1",
-            "\(groceryIdentifier)-3"
-        ]
+        let id = grocery.notificationIdentifier
+        let meals = ["breakfast", "lunch", "dinner", "morning"]
+        var identifiers: [String] = []
+        for days in [0, 1, 3] {
+            for meal in meals {
+                identifiers.append("\(id)-\(days)-\(meal)")
+            }
+        }
         notificationCenter.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 

@@ -7,6 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import SafariServices
+
+private struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    func makeUIViewController(context: Context) -> SFSafariViewController { SFSafariViewController(url: url) }
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
+}
 
 struct RecipeDetailView: View {
     let recipeId: Int
@@ -20,6 +27,8 @@ struct RecipeDetailView: View {
     @State private var errorMessage: String?
     @State private var selectedTab = 0
     @State private var showingSaveConfirmation = false
+    @State private var amazonURL: URL?
+    @State private var showingAmazon = false
 
     private var isSaved: Bool {
         savedRecipes.contains { $0.recipeId == recipeId }
@@ -65,6 +74,11 @@ struct RecipeDetailView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: showingSaveConfirmation)
+        .sheet(isPresented: $showingAmazon) {
+            if let url = amazonURL {
+                SafariView(url: url)
+            }
+        }
     }
 
     // MARK: - Save Confirmation Banner
@@ -88,9 +102,21 @@ struct RecipeDetailView: View {
     private func toggleSave() {
         if let existing = savedRecipe {
             modelContext.delete(existing)
+            InteractionTrackingService.shared.log(
+                recipeId: recipeId,
+                recipeTitle: recipe?.title ?? "",
+                type: .unsaved,
+                context: modelContext
+            )
         } else if let recipe = recipe {
             let saved = SavedRecipe(from: recipe)
             modelContext.insert(saved)
+            InteractionTrackingService.shared.log(
+                recipeId: recipeId,
+                recipeTitle: recipe.title,
+                type: .saved,
+                context: modelContext
+            )
         }
 
         showingSaveConfirmation = true
@@ -345,6 +371,20 @@ struct RecipeDetailView: View {
                         }
 
                         Spacer()
+
+                        if let url = AmazonAffiliateService.searchURL(for: ingredient.name) {
+                            Button {
+                                amazonURL = url
+                                showingAmazon = true
+                            } label: {
+                                Image(systemName: "cart.badge.plus")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.orange)
+                                    .padding(6)
+                                    .background(Color.orange.opacity(0.12), in: Circle())
+                            }
+                            .buttonStyle(.plain)
+                        }
                     }
                     .padding(.vertical, 8)
 
@@ -454,6 +494,12 @@ struct RecipeDetailView: View {
             let detail = try await RecipeAPIService.shared.getRecipeDetail(id: recipeId)
             await MainActor.run {
                 self.recipe = detail
+                InteractionTrackingService.shared.log(
+                    recipeId: recipeId,
+                    recipeTitle: detail.title,
+                    type: .viewed,
+                    context: modelContext
+                )
             }
         } catch {
             await MainActor.run {

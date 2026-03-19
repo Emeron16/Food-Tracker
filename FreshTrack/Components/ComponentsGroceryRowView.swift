@@ -57,9 +57,26 @@ struct GroceryRowView: View {
                 .fill(categoryColor.opacity(0.15))
                 .frame(width: 44, height: 44)
 
-            Image(systemName: grocery.category.icon)
-                .font(.system(size: 20))
-                .foregroundStyle(categoryColor)
+            if let urlString = grocery.productImageURL, let url = URL(string: urlString) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 44, height: 44)
+                            .clipShape(Circle())
+                    default:
+                        Image(systemName: grocery.category.icon)
+                            .font(.system(size: 20))
+                            .foregroundStyle(categoryColor)
+                    }
+                }
+            } else {
+                Image(systemName: grocery.category.icon)
+                    .font(.system(size: 20))
+                    .foregroundStyle(categoryColor)
+            }
         }
     }
 

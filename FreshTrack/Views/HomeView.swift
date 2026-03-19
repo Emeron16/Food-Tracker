@@ -7,6 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import SafariServices
+
+private struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    func makeUIViewController(context: Context) -> SFSafariViewController { SFSafariViewController(url: url) }
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
+}
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -86,11 +93,6 @@ struct HomeView: View {
                     // Expiring soon alert
                     if !expiringSoonItems.isEmpty {
                         expiringSoonSection
-                    }
-
-                    // Expired items alert
-                    if !expiredItems.isEmpty {
-                        expiredSection
                     }
 
                     // Storage breakdown
@@ -507,16 +509,89 @@ struct StatCard: View {
     }
 }
 
+// MARK: - Interactive Grocery Row (shared by all sheets)
+
+struct InteractiveGroceryRow: View {
+    let grocery: Grocery
+    let iconColor: Color
+    let onEdit: (Grocery) -> Void
+    let onDelete: (Grocery) -> Void
+    let onConsume: ((Grocery) -> Void)?
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: grocery.category.icon)
+                .foregroundStyle(iconColor)
+                .frame(width: 24)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(grocery.name)
+                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(grocery.quantityDisplayText)
+                    Text("·")
+                    Text(grocery.storageLocation.rawValue)
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            if let days = grocery.daysUntilExpiration {
+                ExpirationBadge(days: days, status: grocery.expirationStatus)
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture { onEdit(grocery) }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive) {
+                onDelete(grocery)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            if let onConsume {
+                Button {
+                    onConsume(grocery)
+                } label: {
+                    Label("Used", systemImage: "checkmark.circle")
+                }
+                .tint(.green)
+            }
+        }
+    }
+}
+
+// MARK: - Sheet Action Helpers
+
+private func deleteGrocery(_ grocery: Grocery, context: ModelContext) {
+    ExpirationNotificationService.shared.removeNotifications(for: grocery)
+    context.delete(grocery)
+    NotificationCenter.default.post(name: .groceriesDidChange, object: nil)
+}
+
+private func markConsumed(_ grocery: Grocery) {
+    grocery.isConsumed = true
+    grocery.consumedDate = Date()
+    grocery.updatedAt = Date()
+    ExpirationNotificationService.shared.removeNotifications(for: grocery)
+    NotificationCenter.default.post(name: .groceriesDidChange, object: nil)
+}
+
 // MARK: - Storage Detail Sheet
 
 struct StorageDetailSheet: View {
     let location: StorageLocation
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query(
-        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        filter: #Predicate<Grocery> { !$0.isConsumed },
         sort: \Grocery.purchaseDate,
         order: .reverse
     ) private var allGroceries: [Grocery]
+    @State private var groceryToEdit: Grocery?
 
     init(location: StorageLocation) {
         self.location = location
@@ -540,25 +615,13 @@ struct StorageDetailSheet: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(groceries) { grocery in
-                        HStack(spacing: 12) {
-                            Image(systemName: grocery.category.icon)
-                                .foregroundStyle(.tint)
-                                .frame(width: 24)
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(grocery.name)
-                                    .lineLimit(1)
-                                Text(grocery.quantityDisplayText)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Spacer()
-
-                            if let days = grocery.daysUntilExpiration {
-                                ExpirationBadge(days: days, status: grocery.expirationStatus)
-                            }
-                        }
+                        InteractiveGroceryRow(
+                            grocery: grocery,
+                            iconColor: .accentColor,
+                            onEdit: { groceryToEdit = $0 },
+                            onDelete: { deleteGrocery($0, context: modelContext) },
+                            onConsume: { markConsumed($0) }
+                        )
                     }
                 }
             }
@@ -572,6 +635,7 @@ struct StorageDetailSheet: View {
                     Button("Done") { dismiss() }
                 }
             }
+            .sheet(item: $groceryToEdit) { EditGroceryView(grocery: $0) }
         }
 #if os(iOS)
         .presentationDetents([.medium, .large])
@@ -587,11 +651,13 @@ struct CategoryDetailSheet: View {
     let category: FoodCategory
     let categoryColor: Color
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query(
-        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        filter: #Predicate<Grocery> { !$0.isConsumed },
         sort: \Grocery.purchaseDate,
         order: .reverse
     ) private var allGroceries: [Grocery]
+    @State private var groceryToEdit: Grocery?
 
     init(category: FoodCategory, categoryColor: Color) {
         self.category = category
@@ -616,29 +682,13 @@ struct CategoryDetailSheet: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(groceries) { grocery in
-                        HStack(spacing: 12) {
-                            Image(systemName: grocery.storageLocation.icon)
-                                .foregroundStyle(categoryColor)
-                                .frame(width: 24)
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(grocery.name)
-                                    .lineLimit(1)
-                                HStack(spacing: 4) {
-                                    Text(grocery.quantityDisplayText)
-                                    Text("·")
-                                    Text(grocery.storageLocation.rawValue)
-                                }
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            }
-
-                            Spacer()
-
-                            if let days = grocery.daysUntilExpiration {
-                                ExpirationBadge(days: days, status: grocery.expirationStatus)
-                            }
-                        }
+                        InteractiveGroceryRow(
+                            grocery: grocery,
+                            iconColor: categoryColor,
+                            onEdit: { groceryToEdit = $0 },
+                            onDelete: { deleteGrocery($0, context: modelContext) },
+                            onConsume: { markConsumed($0) }
+                        )
                     }
                 }
             }
@@ -652,6 +702,7 @@ struct CategoryDetailSheet: View {
                     Button("Done") { dismiss() }
                 }
             }
+            .sheet(item: $groceryToEdit) { EditGroceryView(grocery: $0) }
         }
 #if os(iOS)
         .presentationDetents([.medium, .large])
@@ -665,11 +716,13 @@ struct CategoryDetailSheet: View {
 
 struct TotalItemsSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query(
-        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        filter: #Predicate<Grocery> { !$0.isConsumed },
         sort: \Grocery.purchaseDate,
         order: .reverse
     ) private var groceries: [Grocery]
+    @State private var groceryToEdit: Grocery?
 
     var body: some View {
         NavigationStack {
@@ -684,7 +737,13 @@ struct TotalItemsSheet: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(groceries) { grocery in
-                        GroceryItemRow(grocery: grocery)
+                        InteractiveGroceryRow(
+                            grocery: grocery,
+                            iconColor: .accentColor,
+                            onEdit: { groceryToEdit = $0 },
+                            onDelete: { deleteGrocery($0, context: modelContext) },
+                            onConsume: { markConsumed($0) }
+                        )
                     }
                 }
             }
@@ -698,6 +757,7 @@ struct TotalItemsSheet: View {
                     Button("Done") { dismiss() }
                 }
             }
+            .sheet(item: $groceryToEdit) { EditGroceryView(grocery: $0) }
         }
 #if os(iOS)
         .presentationDetents([.medium, .large])
@@ -711,10 +771,12 @@ struct TotalItemsSheet: View {
 
 struct ExpiringSoonSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query(
-        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        filter: #Predicate<Grocery> { !$0.isConsumed },
         sort: \Grocery.expirationDate
     ) private var allGroceries: [Grocery]
+    @State private var groceryToEdit: Grocery?
 
     private var expiringSoonGroceries: [Grocery] {
         allGroceries.filter {
@@ -737,7 +799,13 @@ struct ExpiringSoonSheet: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(expiringSoonGroceries) { grocery in
-                        GroceryItemRow(grocery: grocery)
+                        InteractiveGroceryRow(
+                            grocery: grocery,
+                            iconColor: .orange,
+                            onEdit: { groceryToEdit = $0 },
+                            onDelete: { deleteGrocery($0, context: modelContext) },
+                            onConsume: { markConsumed($0) }
+                        )
                     }
                 }
             }
@@ -751,6 +819,7 @@ struct ExpiringSoonSheet: View {
                     Button("Done") { dismiss() }
                 }
             }
+            .sheet(item: $groceryToEdit) { EditGroceryView(grocery: $0) }
         }
 #if os(iOS)
         .presentationDetents([.medium, .large])
@@ -764,10 +833,12 @@ struct ExpiringSoonSheet: View {
 
 struct ExpiredItemsSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query(
-        filter: #Predicate<Grocery> { $0.consumedDate == nil },
+        filter: #Predicate<Grocery> { !$0.isConsumed },
         sort: \Grocery.expirationDate
     ) private var allGroceries: [Grocery]
+    @State private var groceryToEdit: Grocery?
 
     private var expiredGroceries: [Grocery] {
         allGroceries.filter { $0.expirationStatus == .expired }
@@ -787,7 +858,13 @@ struct ExpiredItemsSheet: View {
                     .listRowSeparator(.hidden)
                 } else {
                     ForEach(expiredGroceries) { grocery in
-                        GroceryItemRow(grocery: grocery)
+                        InteractiveGroceryRow(
+                            grocery: grocery,
+                            iconColor: .red,
+                            onEdit: { groceryToEdit = $0 },
+                            onDelete: { deleteGrocery($0, context: modelContext) },
+                            onConsume: { markConsumed($0) }
+                        )
                     }
                 }
             }
@@ -801,6 +878,7 @@ struct ExpiredItemsSheet: View {
                     Button("Done") { dismiss() }
                 }
             }
+            .sheet(item: $groceryToEdit) { EditGroceryView(grocery: $0) }
         }
 #if os(iOS)
         .presentationDetents([.medium, .large])
@@ -814,11 +892,15 @@ struct ExpiredItemsSheet: View {
 
 struct ConsumedItemsSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query(
         filter: #Predicate<Grocery> { $0.consumedDate != nil },
         sort: \Grocery.consumedDate,
         order: .reverse
     ) private var consumedGroceries: [Grocery]
+    @State private var groceryToEdit: Grocery?
+    @State private var amazonURL: URL?
+    @State private var showingAmazon = false
 
     var body: some View {
         NavigationStack {
@@ -857,10 +939,37 @@ struct ConsumedItemsSheet: View {
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
+
+                            if let url = AmazonAffiliateService.searchURL(for: grocery.name) {
+                                Button {
+                                    amazonURL = url
+                                    showingAmazon = true
+                                } label: {
+                                    Image(systemName: "cart.badge.plus")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.orange)
+                                        .padding(6)
+                                        .background(Color.orange.opacity(0.12), in: Circle())
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture { groceryToEdit = grocery }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                deleteGrocery(grocery, context: modelContext)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
                         }
                     }
                 }
             }
+            .sheet(isPresented: $showingAmazon) {
+                if let url = amazonURL { SafariView(url: url) }
+            }
+            .sheet(item: $groceryToEdit) { EditGroceryView(grocery: $0) }
             .listStyle(.plain)
             .navigationTitle("Consumed (\(consumedGroceries.count))")
 #if os(iOS)
@@ -880,7 +989,7 @@ struct ConsumedItemsSheet: View {
     }
 }
 
-// MARK: - Grocery Item Row (Reusable)
+// MARK: - Grocery Item Row (kept for compatibility)
 
 struct GroceryItemRow: View {
     let grocery: Grocery

@@ -38,6 +38,12 @@ struct MainTabView: View {
                     Label("Recipes", systemImage: "fork.knife")
                 }
                 .tag(3)
+
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+                .tag(4)
         }
     }
 }

@@ -11,12 +11,15 @@ import UserNotifications
 
 @main
 struct FreshTrackApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+    @ObservedObject private var mealSettings = MealTimeSettings.shared
     private var notificationService: ExpirationNotificationService { ExpirationNotificationService.shared }
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Grocery.self,
             SavedRecipe.self,
+            RecipeInteraction.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -29,33 +32,37 @@ struct FreshTrackApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-                .task {
-                    await setupNotifications()
+            Group {
+                if mealSettings.onboardingComplete {
+                    MainTabView()
+                } else {
+                    OnboardingView()
                 }
-                .onReceive(NotificationCenter.default.publisher(for: .groceriesDidChange)) { _ in
-                    Task {
-                        await refreshNotifications()
-                    }
+            }
+            .task {
+                await setupNotifications()
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase == .active {
+                    Task { await refreshNotifications() }
                 }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .groceriesDidChange)) { _ in
+                Task { await refreshNotifications() }
+            }
         }
         .modelContainer(sharedModelContainer)
     }
 
     @MainActor
     private func setupNotifications() async {
-        // Setup notification categories
         notificationService.setupNotificationCategories()
-
-        // Check current authorization
         await notificationService.checkAuthorizationStatus()
 
-        // Request authorization if not determined
         if notificationService.authorizationStatus == .notDetermined {
             _ = await notificationService.requestAuthorization()
         }
 
-        // Schedule notifications for existing groceries
         await refreshNotifications()
     }
 

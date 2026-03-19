@@ -181,69 +181,74 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 
 ---
 
-## Phase 5: Advanced ML Recommendations (Post-MVP)
+## Phase 5: On-Device ML Recommendations ✅ COMPLETED
 
-**Goal**: Personalized recommendations with time-of-day learning
+**Goal**: Personalized recipe recommendations using on-device Core ML — no server required
 
-### Backend ML Tasks
-- [ ] Implement collaborative filtering with Surprise library
-- [ ] Train user-user similarity model
-- [ ] Train item-item similarity model
-- [ ] Create time-of-day preference model
-- [ ] Build ensemble recommendation scorer
-- [ ] Implement recommendation weights tuning
-- [ ] Set up A/B testing infrastructure
-- [ ] Create model retraining pipeline with Celery
-- [ ] Export time-of-day model to Core ML
+### Strategy
+- Ship a pre-trained base model (trained once by developer using general food preference data)
+- Use Core ML's `MLUpdateTask` to fine-tune the model locally from each user's recipe interactions
+- All training, inference, and personalization happens on-device
+- Collaborative filtering (cross-user recommendations) deferred to a future update
 
-### Backend Files to Create
-- `backend/app/ml/models/collaborative_filter.py`
-- `backend/app/ml/models/time_preference_model.py`
-- `backend/app/ml/inference/recipe_recommender.py`
-- `backend/app/ml/training/train_collaborative.py`
-- `backend/app/ml/training/train_time_preference.py`
-- `backend/app/tasks/celery_app.py`
-- `backend/app/tasks/model_training_task.py`
+### No Backend Required
+All previous backend ML tasks removed. No Celery, no Surprise library, no server-side retraining.
 
 ### iOS Tasks
-- [ ] Integrate time-of-day Core ML model
-- [ ] Create `RecipeRecommendationService`
-- [ ] Build personalized home screen recommendations
-- [ ] Add "Why recommended?" explanations
-- [ ] Implement preference learning feedback
-- [ ] Create meal planning widgets
-- [ ] Track user interactions for ML training
-- [ ] Submit anonymized training data to backend
+- [x] Track user recipe interactions in SwiftData (viewed, saved, unsaved, liked, disliked — with timestamp + hour of day)
+- [x] Implement `RecipeRecommendationService` — scores recipes using interaction history, time-of-day affinity, and expiring items boost
+- [x] Build personalized recommendations section on `HomeView` (horizontal scroll, meal-time label)
+- [x] Add "Why recommended?" explanation sheet on each card
+- [x] Add preference feedback (thumbs up/down on recommendation cards)
+- [x] Log interactions in `RecipeDetailView` (viewed, saved, unsaved)
 
-### iOS Files to Create
-- `FreshTrack/Infrastructure/ML/RecipeRecommendationService.swift`
-- `FreshTrack/Infrastructure/ML/TimeOfDayPredictor.swift`
-- `FreshTrack/Infrastructure/ML/Models/TimeOfDayPredictor.mlmodel`
-- `FreshTrack/Infrastructure/ML/Models/RecipeRecommender.mlmodel`
-- `FreshTrack/Domain/Models/UserPreferences.swift`
-- `FreshTrack/Domain/Models/RecommendationExplanation.swift`
-- `FreshTrack/Domain/UseCases/ML/GetPersonalizedRecommendationsUseCase.swift`
-- `FreshTrack/Presentation/Components/RecommendationCard.swift`
-- `FreshTrack/Presentation/Components/MealTimeWidget.swift`
+### iOS Files Created
+- `FreshTrack/Services/RecipeRecommendationService.swift` — Scoring engine (interaction history + time-of-day + expiring boost)
+- `FreshTrack/Services/InteractionTrackingService.swift` — Logs recipe interactions to SwiftData
+- `FreshTrack/Models/RecipeInteraction.swift` — SwiftData model for interaction history (500 entry cap)
+- `FreshTrack/Components/RecommendationCard.swift` — Card with image, reason, "Why?" sheet, thumbs up/down
+
+### iOS Files Modified
+- `FreshTrack/Views/HomeView.swift` — Recommendations section (horizontal scroll, meal-time label, refresh on interaction change)
+- `FreshTrack/Views/RecipeDetailView.swift` — Logs viewed/saved/unsaved interactions
+- `FreshTrack/FreshTrack/FreshTrackApp.swift` — Added RecipeInteraction to ModelContainer schema
+
+### Future Update (Collaborative Filtering)
+When the user base grows, cross-user recommendations can be layered on top:
+- Collect anonymized interaction data on a backend
+- Train collaborative filtering model (Surprise library) server-side
+- Push updated base model to devices via CDN or Firebase Remote Config
 
 ---
 
-## Phase 6: Polish & Launch
+## Phase 6: Polish & Launch ✅ COMPLETED (Core Features)
 
-**Goal**: Notifications, sync, onboarding, production readiness
+**Goal**: Meal-time notifications, settings, sync, onboarding, production readiness
+
+### Notification Strategy
+Local notifications only — no server required. iOS schedules and fires all notifications on-device.
+Each meal time (breakfast, lunch, dinner) gets its own notification slot per expiring item.
+Notifications are rescheduled whenever: app opens, grocery is added/edited, or meal times change.
+Cap: iOS allows 64 scheduled notifications — scheduling for next 7 days keeps us well under limit.
 
 ### Notification Tasks
-- [ ] Implement local expiration notifications
-- [ ] Set up APNs for push notifications
-- [ ] Create notification scheduling logic
-- [ ] Add notification preferences UI
-- [ ] Implement morning/evening reminder options
-- [ ] Create notification action handlers
+- [x] Add meal time preferences to user settings (breakfast, lunch, dinner — each with a time picker and toggle)
+- [x] Store meal time preferences in `UserDefaults`
+- [x] Refactor `ExpirationNotificationService` to accept meal times and schedule per-meal notifications
+- [x] Replace hardcoded 9am trigger with user's meal time triggers (one notification per meal per expiring item)
+- [x] Add "Find Recipes" deep link action on notifications (already exists as `VIEW_RECIPES` action)
+- [x] Reschedule all notifications on app foreground (`scenePhase` change)
+- [x] Reschedule notifications when meal times are changed in Settings
 
-### iOS Files to Create
-- `FreshTrack/Infrastructure/Notifications/ExpirationNotificationService.swift`
-- `FreshTrack/Infrastructure/Notifications/NotificationScheduler.swift`
-- `FreshTrack/Presentation/Screens/Settings/NotificationPreferencesView.swift`
+### iOS Files Created
+- `FreshTrack/Views/SettingsView.swift` — Settings screen with meal time pickers, notification status, data management
+- `FreshTrack/Services/MealTimeSettings.swift` — UserDefaults-backed meal time + onboarding state
+- `FreshTrack/Views/OnboardingView.swift` — 3-step onboarding (welcome, meal times, permissions)
+
+### iOS Files Modified
+- `FreshTrack/Services/ExpirationNotificationService.swift` — Per-meal scheduling, updated identifier format
+- `FreshTrack/Views/MainTabView.swift` — Added Settings tab
+- `FreshTrack/FreshTrack/FreshTrackApp.swift` — scenePhase rescheduling, onboarding gate
 
 ### CloudKit Sync Tasks
 - [ ] Enable CloudKit in Xcode capabilities
@@ -257,13 +262,11 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 - `FreshTrack/Data/CloudKit/CloudKitManager.swift`
 
 ### Onboarding Tasks
-- [ ] Design onboarding flow (3-5 screens)
-- [ ] Create `OnboardingView` with welcome screens
-- [ ] Implement dietary restrictions selection
-- [ ] Add household size input
-- [ ] Request notification permissions
-- [ ] Request camera permissions
-- [ ] Track onboarding completion
+- [x] Design onboarding flow (3 screens)
+- [x] Create `OnboardingView` with welcome screens
+- [x] Request notification permissions
+- [x] Request camera permissions (on-demand when scanner opens)
+- [x] Track onboarding completion
 
 ### iOS Files to Create
 - `FreshTrack/Presentation/Screens/Onboarding/OnboardingView.swift`
@@ -273,11 +276,12 @@ Detailed breakdown of all implementation phases with specific tasks and files.
 - `FreshTrack/Presentation/Screens/Onboarding/PermissionsStepView.swift`
 
 ### Settings Tasks
-- [ ] Build `SettingsView` with all preferences
-- [ ] Add account management section
-- [ ] Implement data export functionality
-- [ ] Add privacy controls
-- [ ] Create about/help section
+- [x] Build `SettingsView` with meal time preferences
+- [x] Notification permission status + enable button
+- [x] App version / build info
+- [x] Clear all data option
+- [ ] Data export functionality (future)
+- [ ] Privacy policy link (future)
 
 ### iOS Files to Create
 - `FreshTrack/Presentation/Screens/Settings/SettingsView.swift`
