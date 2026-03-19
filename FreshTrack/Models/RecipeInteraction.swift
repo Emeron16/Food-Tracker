@@ -22,7 +22,8 @@ enum InteractionType: String, Codable {
 final class RecipeInteraction {
     var recipeId: Int
     var recipeTitle: String
-    var recipeCategory: String  // primary cuisine/dish type tag if available
+    var recipeImage: String = ""  // Spoonacular image URL
+    var recipeCategory: String    // primary cuisine/dish type tag if available
     var interactionTypeRaw: String
     var timestamp: Date
 
@@ -47,9 +48,10 @@ final class RecipeInteraction {
         }
     }
 
-    init(recipeId: Int, recipeTitle: String, recipeCategory: String = "", type: InteractionType) {
+    init(recipeId: Int, recipeTitle: String, recipeImage: String = "", recipeCategory: String = "", type: InteractionType) {
         self.recipeId = recipeId
         self.recipeTitle = recipeTitle
+        self.recipeImage = recipeImage
         self.recipeCategory = recipeCategory
         self.interactionTypeRaw = type.rawValue
         self.timestamp = Date()

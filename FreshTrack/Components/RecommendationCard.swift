@@ -17,27 +17,38 @@ struct RecommendationCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Recipe image
-            AsyncImage(url: URL(string: recommendation.image)) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .empty:
-                    Rectangle()
-                        .fill(.quaternary)
-                        .overlay { ProgressView().scaleEffect(0.7) }
-                default:
-                    Rectangle()
-                        .fill(.quaternary)
-                        .overlay {
-                            Image(systemName: "fork.knife")
-                                .foregroundStyle(.secondary)
-                        }
+            let imageURL = recommendation.image.isEmpty ? nil : URL(string: recommendation.image)
+            if let imageURL {
+                AsyncImage(url: imageURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .empty:
+                        Rectangle()
+                            .fill(.quaternary)
+                            .overlay { ProgressView().scaleEffect(0.7) }
+                    default:
+                        Rectangle()
+                            .fill(.quaternary)
+                            .overlay {
+                                Image(systemName: "fork.knife")
+                                    .foregroundStyle(.secondary)
+                            }
+                    }
                 }
+                .frame(height: 130)
+                .clipped()
+            } else {
+                Rectangle()
+                    .fill(.quaternary)
+                    .overlay {
+                        Image(systemName: "fork.knife")
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(height: 130)
             }
-            .frame(height: 130)
-            .clipped()
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(recommendation.title)

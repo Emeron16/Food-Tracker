@@ -92,7 +92,7 @@ final class RecipeRecommendationService: ObservableObject {
             RecipeRecommendation(
                 id: item.candidate.recipeId,
                 title: item.candidate.recipeTitle,
-                image: "",   // image not stored in interactions — card handles missing gracefully
+                image: item.candidate.recipeImage,
                 readyInMinutes: nil,
                 score: maxScore > 0 ? item.score / maxScore : 0,
                 reason: item.reason

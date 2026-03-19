@@ -15,9 +15,8 @@ actor RecipeAPIService {
     private let baseURL = URL(string: "https://api.spoonacular.com")!
     private let session: URLSession
 
-    // IMPORTANT: Replace with your Spoonacular API key
-    // Get one free at: https://spoonacular.com/food-api
-    private let apiKey = "0c3a3e49e6f74f80b6b4a2e56924be1e"
+    // API key is read from Info.plist, which is populated from Secrets.xcconfig (not committed to git).
+    private let apiKey: String = Bundle.main.infoDictionary?["SPOONACULAR_API_KEY"] as? String ?? ""
 
 
     private init() {

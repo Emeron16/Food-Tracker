@@ -105,6 +105,7 @@ struct RecipeDetailView: View {
             InteractionTrackingService.shared.log(
                 recipeId: recipeId,
                 recipeTitle: recipe?.title ?? "",
+                recipeImage: recipe?.image ?? "",
                 type: .unsaved,
                 context: modelContext
             )
@@ -114,6 +115,7 @@ struct RecipeDetailView: View {
             InteractionTrackingService.shared.log(
                 recipeId: recipeId,
                 recipeTitle: recipe.title,
+                recipeImage: recipe.image,
                 type: .saved,
                 context: modelContext
             )
@@ -497,6 +499,7 @@ struct RecipeDetailView: View {
                 InteractionTrackingService.shared.log(
                     recipeId: recipeId,
                     recipeTitle: detail.title,
+                    recipeImage: detail.image,
                     type: .viewed,
                     context: modelContext
                 )

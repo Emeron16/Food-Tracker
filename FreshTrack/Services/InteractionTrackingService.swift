@@ -17,6 +17,7 @@ final class InteractionTrackingService {
     func log(
         recipeId: Int,
         recipeTitle: String,
+        recipeImage: String = "",
         recipeCategory: String = "",
         type: InteractionType,
         context: ModelContext
@@ -24,6 +25,7 @@ final class InteractionTrackingService {
         let interaction = RecipeInteraction(
             recipeId: recipeId,
             recipeTitle: recipeTitle,
+            recipeImage: recipeImage,
             recipeCategory: recipeCategory,
             type: type
         )
