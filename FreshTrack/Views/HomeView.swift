@@ -28,6 +28,7 @@ struct HomeView: View {
     ) private var consumedGroceries: [Grocery]
 
     @State private var showingAddGrocery = false
+    @State private var showingReceiptScanner = false
     @State private var selectedStorageLocation: StorageLocation?
     @State private var selectedCategory: FoodCategory?
     @State private var showingTotalItems = false
@@ -115,6 +116,13 @@ struct HomeView: View {
             .navigationTitle("Dashboard")
             .toolbar {
 #if os(iOS)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        showingReceiptScanner = true
+                    } label: {
+                        Image(systemName: "doc.text.viewfinder")
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showingAddGrocery = true
@@ -134,6 +142,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingAddGrocery) {
                 AddGroceryView()
+            }
+            .sheet(isPresented: $showingReceiptScanner) {
+                ReceiptScannerView()
             }
             .sheet(item: $selectedStorageLocation) { location in
                 StorageDetailSheet(location: location)

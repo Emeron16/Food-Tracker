@@ -9,20 +9,28 @@ struct OnboardingView: View {
     @StateObject private var mealSettings = MealTimeSettings.shared
     @StateObject private var notificationService = ExpirationNotificationService.shared
     @State private var currentStep = 0
+    @State private var showingTutorial = false
 
     var body: some View {
-        TabView(selection: $currentStep) {
-            WelcomeStep(onNext: { currentStep = 1 })
-                .tag(0)
-            MealTimesStep(onNext: { currentStep = 2 })
-                .tag(1)
-            PermissionsStep(onComplete: completeOnboarding)
+        if showingTutorial {
+            TutorialView(onComplete: completeOnboarding)
+        } else {
+            TabView(selection: $currentStep) {
+                WelcomeStep(onNext: { currentStep = 1 })
+                    .tag(0)
+                MealTimesStep(onNext: { currentStep = 2 })
+                    .tag(1)
+                PermissionsStep(
+                    onComplete: { showingTutorial = true },
+                    onSkip: completeOnboarding
+                )
                 .tag(2)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+            .indexViewStyle(.page(backgroundDisplayMode: .always))
+            .animation(.easeInOut, value: currentStep)
+            .interactiveDismissDisabled()
         }
-        .tabViewStyle(.page(indexDisplayMode: .always))
-        .indexViewStyle(.page(backgroundDisplayMode: .always))
-        .animation(.easeInOut, value: currentStep)
-        .interactiveDismissDisabled()
     }
 
     private func completeOnboarding() {
@@ -190,6 +198,7 @@ private struct MealTimesStep: View {
 private struct PermissionsStep: View {
     @StateObject private var notificationService = ExpirationNotificationService.shared
     let onComplete: () -> Void
+    var onSkip: (() -> Void)? = nil
     @State private var didRequestNotifications = false
 
     var body: some View {
@@ -240,13 +249,23 @@ private struct PermissionsStep: View {
 
             Spacer()
 
-            Button(action: onComplete) {
-                Text("Start Tracking")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(.blue, in: RoundedRectangle(cornerRadius: 14))
-                    .foregroundStyle(.white)
+            VStack(spacing: 12) {
+                Button(action: onComplete) {
+                    Text("Take a Quick Tour")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.blue, in: RoundedRectangle(cornerRadius: 14))
+                        .foregroundStyle(.white)
+                }
+
+                if let onSkip {
+                    Button(action: onSkip) {
+                        Text("Skip Tutorial")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 40)
@@ -292,6 +311,168 @@ private struct PermissionsStep: View {
     }
 }
 
+// MARK: - Tutorial View
+
+struct TutorialView: View {
+    let onComplete: () -> Void
+    @State private var currentSlide = 0
+
+    private let slides: [TutorialSlide] = [
+        TutorialSlide(
+            icon: "refrigerator.fill",
+            iconColor: .blue,
+            title: "Your Pantry",
+            body: "Add groceries by tapping **+** or scanning a barcode. Tap any item to edit it. Swipe left to delete, swipe right to mark as consumed.",
+            tip: nil
+        ),
+        TutorialSlide(
+            icon: "brain",
+            iconColor: .purple,
+            title: "Smart Expiration Dates",
+            body: "FreshTrack uses on-device AI to predict when your food will expire based on its category and where you store it. No internet required.",
+            tip: "You can always set a manual expiration date in the edit screen."
+        ),
+        TutorialSlide(
+            icon: "fork.knife",
+            iconColor: .orange,
+            title: "Recipe Discovery",
+            body: "Search recipes by keyword, or tap **My Ingredients** to find recipes using what's already in your pantry. Save favorites with the bookmark icon.",
+            tip: nil
+        ),
+        TutorialSlide(
+            icon: "cart.badge.plus",
+            iconColor: .orange,
+            title: "Reorder on Amazon",
+            body: "Running low on something? Tap the **orange cart button** next to any ingredient in a recipe or any item in your pantry to instantly search Amazon and reorder it.",
+            tip: "The cart button opens Amazon in your browser so you get full search results and the best prices. Your purchase helps support FreshTrack at no extra cost to you."
+        ),
+        TutorialSlide(
+            icon: "bell.badge.fill",
+            iconColor: .orange,
+            title: "Meal-Time Reminders",
+            body: "FreshTrack sends you a reminder at breakfast, lunch, and dinner when items are about to expire — so nothing gets forgotten at the back of the fridge.",
+            tip: "Adjust your meal times anytime in the Settings tab."
+        )
+    ]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Skip button
+            HStack {
+                Spacer()
+                Button("Skip") {
+                    onComplete()
+                }
+                .foregroundStyle(.secondary)
+                .padding()
+            }
+
+            // Slide content
+            TabView(selection: $currentSlide) {
+                ForEach(slides.indices, id: \.self) { index in
+                    TutorialSlideView(slide: slides[index])
+                        .tag(index)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+            .indexViewStyle(.page(backgroundDisplayMode: .always))
+            .animation(.easeInOut, value: currentSlide)
+
+            // Navigation buttons
+            HStack(spacing: 16) {
+                if currentSlide > 0 {
+                    Button {
+                        currentSlide -= 1
+                    } label: {
+                        Text("Back")
+                            .fontWeight(.medium)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(.quaternary, in: RoundedRectangle(cornerRadius: 14))
+                    }
+                }
+
+                Button {
+                    if currentSlide < slides.count - 1 {
+                        currentSlide += 1
+                    } else {
+                        onComplete()
+                    }
+                } label: {
+                    Text(currentSlide < slides.count - 1 ? "Next" : "Start Tracking")
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.green, in: RoundedRectangle(cornerRadius: 14))
+                        .foregroundStyle(.white)
+                }
+            }
+            .padding(.horizontal, 32)
+            .padding(.bottom, 40)
+            .padding(.top, 8)
+        }
+    }
+}
+
+// MARK: - Tutorial Slide Model
+
+private struct TutorialSlide {
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let body: String
+    let tip: String?
+}
+
+// MARK: - Tutorial Slide View
+
+private struct TutorialSlideView: View {
+    let slide: TutorialSlide
+
+    var body: some View {
+        VStack(spacing: 28) {
+            Spacer()
+
+            Image(systemName: slide.icon)
+                .font(.system(size: 72))
+                .foregroundStyle(slide.iconColor)
+
+            VStack(spacing: 12) {
+                Text(slide.title)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+
+                Text(.init(slide.body))
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
+            }
+
+            if let tip = slide.tip {
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "lightbulb.fill")
+                        .foregroundStyle(.yellow)
+                        .font(.subheadline)
+                    Text(tip)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
+                .background(.yellow.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal, 32)
+            }
+
+            Spacer()
+        }
+    }
+}
+
 #Preview {
     OnboardingView()
+}
+
+#Preview("Tutorial") {
+    TutorialView(onComplete: {})
 }

@@ -1,0 +1,2 @@
+// Release.xcconfig
+#include "Secrets.xcconfig"

@@ -15,6 +15,19 @@
 		DC0DEE1C2F6B88A000705F5D /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE1B2F6B88A000705F5D /* OnboardingView.swift */; };
 		DC0DEE1E2F6B88C000705F5D /* MealTimeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE1D2F6B88C000705F5D /* MealTimeSettings.swift */; };
 		DC0DEE202F6C327700705F5D /* AmazonAffiliateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0DEE1F2F6C327700705F5D /* AmazonAffiliateService.swift */; };
+		DC9B98B72F7F1C2100A12C99 /* KitchenZoneDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98B52F7F1C2100A12C99 /* KitchenZoneDetailSheet.swift */; };
+		DC9B98B82F7F1C2100A12C99 /* KitchenSceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98B32F7F1C2100A12C99 /* KitchenSceneBuilder.swift */; };
+		DC9B98B92F7F1C2100A12C99 /* KitchenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98B42F7F1C2100A12C99 /* KitchenView.swift */; };
+		DC9B98BE2F8070BC00A12C99 /* ReceiptScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98BC2F8070BC00A12C99 /* ReceiptScannerView.swift */; };
+		DC9B98BF2F8070BC00A12C99 /* ReceiptLineItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98BA2F8070BC00A12C99 /* ReceiptLineItemRow.swift */; };
+		DC9B98C02F8070BC00A12C99 /* ReceiptReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98BB2F8070BC00A12C99 /* ReceiptReviewView.swift */; };
+		DC9B98C22F8070F600A12C99 /* ReceiptScannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98C12F8070F600A12C99 /* ReceiptScannerService.swift */; };
+		DC9B98C42F80710700A12C99 /* RecipeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98C32F80710700A12C99 /* RecipeAPIService.swift */; };
+		DC9B98C62F80710F00A12C99 /* RecipeRecommendationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98C52F80710F00A12C99 /* RecipeRecommendationService.swift */; };
+		DC9B98C82F8071AE00A12C99 /* ReceiptLineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98C72F8071AE00A12C99 /* ReceiptLineItem.swift */; };
+		DC9B98CA2F8071B700A12C99 /* ReceiptOCRResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98C92F8071B700A12C99 /* ReceiptOCRResult.swift */; };
+		DC9B98CC2F80726100A12C99 /* VisionReceiptService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98CB2F80726100A12C99 /* VisionReceiptService.swift */; };
+		DC9B98CE2F8077F900A12C99 /* ReceiptItemSearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9B98CD2F8077F900A12C99 /* ReceiptItemSearchSheet.swift */; };
 		DCCC6A222F28232D008E387D /* ModelsGrocery.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A212F28232D008E387D /* ModelsGrocery.swift */; };
 		DCCC6A262F28233C008E387D /* ViewsAddGroceryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */; };
 		DCCC6A282F282343008E387D /* ComponentsGroceryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCC6A272F282343008E387D /* ComponentsGroceryRowView.swift */; };
@@ -62,6 +75,19 @@
 		DC0DEE1B2F6B88A000705F5D /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		DC0DEE1D2F6B88C000705F5D /* MealTimeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealTimeSettings.swift; sourceTree = "<group>"; };
 		DC0DEE1F2F6C327700705F5D /* AmazonAffiliateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmazonAffiliateService.swift; sourceTree = "<group>"; };
+		DC9B98B32F7F1C2100A12C99 /* KitchenSceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitchenSceneBuilder.swift; sourceTree = "<group>"; };
+		DC9B98B42F7F1C2100A12C99 /* KitchenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitchenView.swift; sourceTree = "<group>"; };
+		DC9B98B52F7F1C2100A12C99 /* KitchenZoneDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KitchenZoneDetailSheet.swift; sourceTree = "<group>"; };
+		DC9B98BA2F8070BC00A12C99 /* ReceiptLineItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLineItemRow.swift; sourceTree = "<group>"; };
+		DC9B98BB2F8070BC00A12C99 /* ReceiptReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReviewView.swift; sourceTree = "<group>"; };
+		DC9B98BC2F8070BC00A12C99 /* ReceiptScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScannerView.swift; sourceTree = "<group>"; };
+		DC9B98C12F8070F600A12C99 /* ReceiptScannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScannerService.swift; sourceTree = "<group>"; };
+		DC9B98C32F80710700A12C99 /* RecipeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeAPIService.swift; sourceTree = "<group>"; };
+		DC9B98C52F80710F00A12C99 /* RecipeRecommendationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeRecommendationService.swift; sourceTree = "<group>"; };
+		DC9B98C72F8071AE00A12C99 /* ReceiptLineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLineItem.swift; sourceTree = "<group>"; };
+		DC9B98C92F8071B700A12C99 /* ReceiptOCRResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptOCRResult.swift; sourceTree = "<group>"; };
+		DC9B98CB2F80726100A12C99 /* VisionReceiptService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionReceiptService.swift; sourceTree = "<group>"; };
+		DC9B98CD2F8077F900A12C99 /* ReceiptItemSearchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptItemSearchSheet.swift; sourceTree = "<group>"; };
 		DCCC69EB2F281F05008E387D /* FreshTrack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreshTrack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCCC69FA2F281F07008E387D /* FreshTrackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreshTrackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCCC6A042F281F07008E387D /* FreshTrackUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreshTrackUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,9 +112,22 @@
 		DCCC6A952F2AB010008E387D /* ExpirationPredictor.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = ExpirationPredictor.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DC0DEE2C2F6CAB6300705F5D /* Exceptions for "FreshTrack" folder in "FreshTrack" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DCCC69EA2F281F05008E387D /* FreshTrack */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DCCC69ED2F281F05008E387D /* FreshTrack */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DC0DEE2C2F6CAB6300705F5D /* Exceptions for "FreshTrack" folder in "FreshTrack" target */,
+			);
 			path = FreshTrack;
 			sourceTree = "<group>";
 		};
@@ -129,6 +168,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC9B98B62F7F1C2100A12C99 /* Kitchen */ = {
+			isa = PBXGroup;
+			children = (
+				DC9B98B32F7F1C2100A12C99 /* KitchenSceneBuilder.swift */,
+				DC9B98B42F7F1C2100A12C99 /* KitchenView.swift */,
+				DC9B98B52F7F1C2100A12C99 /* KitchenZoneDetailSheet.swift */,
+			);
+			path = Kitchen;
+			sourceTree = "<group>";
+		};
+		DC9B98BD2F8070BC00A12C99 /* Receipt */ = {
+			isa = PBXGroup;
+			children = (
+				DC9B98CD2F8077F900A12C99 /* ReceiptItemSearchSheet.swift */,
+				DC9B98BA2F8070BC00A12C99 /* ReceiptLineItemRow.swift */,
+				DC9B98BB2F8070BC00A12C99 /* ReceiptReviewView.swift */,
+				DC9B98BC2F8070BC00A12C99 /* ReceiptScannerView.swift */,
+			);
+			path = Receipt;
+			sourceTree = "<group>";
+		};
 		DCCC69E22F281F05008E387D = {
 			isa = PBXGroup;
 			children = (
@@ -157,9 +217,11 @@
 		DCCC6A292F293A01008E387D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				DC9B98C92F8071B700A12C99 /* ReceiptOCRResult.swift */,
 				DCCC6A212F28232D008E387D /* ModelsGrocery.swift */,
 				DC0DEE112F6B6C0B00705F5D /* RecipeInteraction.swift */,
 				DCCC6A2C2F293EE5008E387D /* PantryView.swift */,
+				DC9B98C72F8071AE00A12C99 /* ReceiptLineItem.swift */,
 				DCCC6A4E2F299095008E387D /* ScannedProduct.swift */,
 				DCCC6A822F2A9B39008E387D /* Recipe.swift */,
 				DCCC6A912F2AAB7D008E387D /* SavedRecipe.swift */,
@@ -170,6 +232,7 @@
 		DCCC6A2A2F293A40008E387D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DC9B98B62F7F1C2100A12C99 /* Kitchen */,
 				DCCC6A252F28233C008E387D /* ViewsAddGroceryView.swift */,
 				DC0DEE192F6B885D00705F5D /* SettingsView.swift */,
 				DC0DEE1B2F6B88A000705F5D /* OnboardingView.swift */,
@@ -179,6 +242,7 @@
 				DCCC6A842F2A9B53008E387D /* RecipeDetailView.swift */,
 				DCCC6A862F2A9B65008E387D /* RecipeListView.swift */,
 				DCCC6A8D2F2AA3F0008E387D /* EditGroceryView.swift */,
+				DC9B98BD2F8070BC00A12C99 /* Receipt */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -196,7 +260,11 @@
 		DCCC6A4C2F29907A008E387D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DC9B98C12F8070F600A12C99 /* ReceiptScannerService.swift */,
 				DC0DEE1F2F6C327700705F5D /* AmazonAffiliateService.swift */,
+				DC9B98C52F80710F00A12C99 /* RecipeRecommendationService.swift */,
+				DC9B98CB2F80726100A12C99 /* VisionReceiptService.swift */,
+				DC9B98C32F80710700A12C99 /* RecipeAPIService.swift */,
 				DC0DEE152F6B6CCC00705F5D /* RecipeRecommendationService.swift */,
 				DCCC6A4B2F29907A008E387D /* BarcodeAPIService.swift */,
 				DC0DEE1D2F6B88C000705F5D /* MealTimeSettings.swift */,
@@ -360,15 +428,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC9B98C42F80710700A12C99 /* RecipeAPIService.swift in Sources */,
 				DCCC6A4D2F29907A008E387D /* BarcodeAPIService.swift in Sources */,
 				DC0DEE1E2F6B88C000705F5D /* MealTimeSettings.swift in Sources */,
 				DC0DEE122F6B6C0B00705F5D /* RecipeInteraction.swift in Sources */,
 				DCCC6A4A2F299058008E387D /* BarcodeScannerView.swift in Sources */,
 				DCCC6A222F28232D008E387D /* ModelsGrocery.swift in Sources */,
+				DC9B98CA2F8071B700A12C99 /* ReceiptOCRResult.swift in Sources */,
 				DCCC6A8B2F2A9BA3008E387D /* RecipeAPIService.swift in Sources */,
 				DCCC6A472F295431008E387D /* HomeView.swift in Sources */,
 				DCCC6A922F2AAB7D008E387D /* SavedRecipe.swift in Sources */,
+				DC9B98CC2F80726100A12C99 /* VisionReceiptService.swift in Sources */,
+				DC9B98C82F8071AE00A12C99 /* ReceiptLineItem.swift in Sources */,
 				DCCC6A2D2F293EE5008E387D /* PantryView.swift in Sources */,
+				DC9B98C62F80710F00A12C99 /* RecipeRecommendationService.swift in Sources */,
 				DCCC6A4F2F299095008E387D /* ScannedProduct.swift in Sources */,
 				DCCC6A852F2A9B53008E387D /* RecipeDetailView.swift in Sources */,
 				DC0DEE182F6B6CEE00705F5D /* RecommendationCard.swift in Sources */,
@@ -379,6 +452,8 @@
 				DCCC6A8E2F2AA3F0008E387D /* EditGroceryView.swift in Sources */,
 				DC0DEE1A2F6B885D00705F5D /* SettingsView.swift in Sources */,
 				DC0DEE142F6B6C7F00705F5D /* InteractionTrackingService.swift in Sources */,
+				DC9B98C22F8070F600A12C99 /* ReceiptScannerService.swift in Sources */,
+				DC9B98CE2F8077F900A12C99 /* ReceiptItemSearchSheet.swift in Sources */,
 				DC0DEE202F6C327700705F5D /* AmazonAffiliateService.swift in Sources */,
 				DCCC6A872F2A9B65008E387D /* RecipeListView.swift in Sources */,
 				DC0DEE162F6B6CCC00705F5D /* RecipeRecommendationService.swift in Sources */,
@@ -386,6 +461,12 @@
 				DCCC6A832F2A9B39008E387D /* Recipe.swift in Sources */,
 				DCCC6A892F2A9B7C008E387D /* RecipeCard.swift in Sources */,
 				DCCC6A942F2AB000008E387D /* ExpirationPredictionService.swift in Sources */,
+				DC9B98B72F7F1C2100A12C99 /* KitchenZoneDetailSheet.swift in Sources */,
+				DC9B98B82F7F1C2100A12C99 /* KitchenSceneBuilder.swift in Sources */,
+				DC9B98BE2F8070BC00A12C99 /* ReceiptScannerView.swift in Sources */,
+				DC9B98BF2F8070BC00A12C99 /* ReceiptLineItemRow.swift in Sources */,
+				DC9B98C02F8070BC00A12C99 /* ReceiptReviewView.swift in Sources */,
+				DC9B98B92F7F1C2100A12C99 /* KitchenView.swift in Sources */,
 				DCCC6A962F2AB010008E387D /* ExpirationPredictor.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -422,6 +503,8 @@
 /* Begin XCBuildConfiguration section */
 		DCCC6A0C2F281F07008E387D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = DCCC69ED2F281F05008E387D /* FreshTrack */;
+			baseConfigurationReferenceRelativePath = Debug.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -483,6 +566,8 @@
 		};
 		DCCC6A0D2F281F07008E387D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = DCCC69ED2F281F05008E387D /* FreshTrack */;
+			baseConfigurationReferenceRelativePath = Release.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -556,6 +641,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FreshTrack/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "FreshTrack uses your camera to scan barcodes on grocery items.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -570,8 +656,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrack;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EML.FreshTrack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -609,6 +695,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FreshTrack/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "FreshTrack uses your camera to scan barcodes on grocery items.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -623,8 +710,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = EML.FreshTrack;
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.EML.FreshTrack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;

@@ -16,13 +16,18 @@ actor RecipeAPIService {
     private let session: URLSession
 
     // API key is read from Info.plist, which is populated from Secrets.xcconfig (not committed to git).
-    private let apiKey: String = Bundle.main.infoDictionary?["SPOONACULAR_API_KEY"] as? String ?? ""
+    private let apiKey: String = {
+        let raw = Bundle.main.infoDictionary?["SPOONACULAR_API_KEY"] as? String ?? ""
+        // Guard against xcconfig duplication (newline-separated repeated values)
+        return raw.components(separatedBy: .newlines).first?.trimmingCharacters(in: .whitespaces) ?? ""
+    }()
 
 
     private init() {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 30
         self.session = URLSession(configuration: config)
+
     }
 
     // MARK: - Search Recipes

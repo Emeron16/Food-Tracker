@@ -27,9 +27,9 @@ struct MainTabView: View {
                 .tag(1)
 #endif
 
-            PantryView()
+            KitchenView()
                 .tabItem {
-                    Label("Pantry", systemImage: "refrigerator.fill")
+                    Label("Kitchen", systemImage: "cabinet.fill")
                 }
                 .tag(2)
 

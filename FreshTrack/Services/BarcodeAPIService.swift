@@ -22,6 +22,58 @@ actor BarcodeAPIService {
         self.session = URLSession(configuration: config)
     }
 
+    /// Search Open Food Facts by product name. Returns top results as (name, brand) tuples.
+    func searchProducts(query: String) async -> [(name: String, brand: String?)] {
+        let trimmed = query.trimmingCharacters(in: .whitespaces)
+        guard trimmed.count >= 3 else { return [] }
+
+        let encodedQuery = trimmed.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? trimmed
+        let urlString = "https://world.openfoodfacts.org/cgi/search.pl?search_terms=\(encodedQuery)&search_simple=1&action=process&json=1&page_size=20&sort_by=unique_scans_n"
+        guard let url = URL(string: urlString) else { return [] }
+
+        var request = URLRequest(url: url)
+        request.setValue("FreshTrack iOS App - github.com/princemarcelle", forHTTPHeaderField: "User-Agent")
+        request.timeoutInterval = 15
+
+        print("🔍 OFF search: '\(trimmed)'")
+
+        guard let (data, response) = try? await session.data(for: request) else {
+            print("❌ OFF search: network error")
+            return []
+        }
+        guard let http = response as? HTTPURLResponse else {
+            print("❌ OFF search: invalid response")
+            return []
+        }
+        print("📡 OFF search HTTP \(http.statusCode) for '\(trimmed)'")
+        guard http.statusCode == 200 else { return [] }
+
+        struct OFFSearchResponse: Decodable {
+            let products: [OFFSearchProduct]
+        }
+        struct OFFSearchProduct: Decodable {
+            let product_name: String?
+            let brands: String?
+        }
+
+        guard let result = try? JSONDecoder().decode(OFFSearchResponse.self, from: data) else {
+            print("❌ OFF search: JSON decode failed")
+            return []
+        }
+        let mapped = result.products.compactMap { p -> (name: String, brand: String?)? in
+            guard let name = p.product_name, !name.isEmpty else { return nil }
+            return (name: name, brand: p.brands)
+        }
+        print("✅ OFF search: \(mapped.count) results for '\(trimmed)'")
+        return mapped
+    }
+
+    /// Quick single-result search used for auto-matching after OCR.
+    func searchByName(_ name: String) async -> String? {
+        let results = await searchProducts(query: name)
+        return results.first?.name
+    }
+
     /// Look up a barcode and return a ScannedProduct if found.
     func lookupBarcode(_ barcode: String) async throws -> ScannedProduct? {
         let url = baseURL.appendingPathComponent(barcode)
